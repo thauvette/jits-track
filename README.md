@@ -7,6 +7,11 @@ VITE_SUPABASE_URL=
 VITE_SUPABASE_PUB_KEY=
 ```
 
+#  TODOs: 
+- optimistic ui on changes and/or loading states
+- toasts for errors 
+- generic loader 
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

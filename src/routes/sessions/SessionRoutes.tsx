@@ -1,9 +1,9 @@
 import { Link, Route, Routes, useNavigate } from 'react-router';
+import dayjs from 'dayjs';
+
 import { SessionForm } from '../../components/SessionForm.tsx';
 import { useSessions } from '../../hooks/useSessions/useSessions.ts';
-import dayjs from 'dayjs';
 import { Session } from './Session.tsx';
-// import { Session } from './Session.tsx';
 
 export const SessionRoutes = () => {
   const { data: sessions, isLoading } = useSessions();
@@ -13,6 +13,7 @@ export const SessionRoutes = () => {
     <Routes>
       <Route
         path={'/'}
+        index
         element={
           <>
             <h1>Sessions</h1>
@@ -26,9 +27,6 @@ export const SessionRoutes = () => {
                     {dayjs(session.date).format('dddD, MMMM, DD YYYY')}
                   </Link>
                   <p>
-                    {session.rollCount} roll{session.rollCount > 1 ? 's' : ''}
-                  </p>
-                  <p>
                     {session.rolls
                       ?.map((roll) => roll.teammate?.name ?? '')
                       .join(', ')}
@@ -41,12 +39,12 @@ export const SessionRoutes = () => {
       />
       <Route path={'/:id'} element={<Session />} />
       <Route
-        path={'create'}
+        path={'/create'}
         element={
           <div className={'p-4'}>
             <SessionForm
               onSuccess={(result) => {
-                navigate(`${result.id}`);
+                navigate(`/sessions/${result.id}`);
               }}
             />
           </div>

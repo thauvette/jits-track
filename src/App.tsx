@@ -5,7 +5,15 @@ import { useSupabase } from './hooks/useSupabase.ts';
 import { Header } from './components/Header.tsx';
 
 function App() {
-  const { isAuthenticated } = useSupabase();
+  const { isAuthenticated, isLoading } = useSupabase();
+
+  if (isLoading) {
+    return (
+      <div>
+        <p>TODO: loading</p>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (

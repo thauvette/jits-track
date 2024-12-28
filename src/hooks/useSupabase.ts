@@ -7,12 +7,18 @@ const supabase = createClient(
 );
 
 export const useSupabase = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
 
     const {
       data: { subscription },
@@ -24,14 +30,18 @@ export const useSupabase = () => {
   }, []);
 
   const logout = async () => {
+    setIsLoading(true);
     await supabase.auth.signOut();
+    setIsLoading(false);
   };
 
   const login = async (email: string, password: string) => {
+    setIsLoading(true);
     const { error, data } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    setIsLoading(false);
     return {
       error,
       data,
@@ -44,5 +54,6 @@ export const useSupabase = () => {
     login,
     isAuthenticated: !!session?.user,
     user: session?.user ?? null,
+    isLoading,
   };
 };

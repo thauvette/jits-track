@@ -1,8 +1,7 @@
 export interface SessionRequestBody {
   date: string; // YYYY-MM-DD
   duration_seconds?: number; // ux for start/end and convert
-  coach?: number; //teammate id TODO: add teammate modal (for coach and rolls)
-  roll_count?: number;
+  coach?: number; //teammate id
   avg_heart_rate?: number;
   calories?: number;
   type?: string;
@@ -13,7 +12,6 @@ export interface SessionResponseItem {
   created_at: string;
   duration_seconds: number;
   coach: number | null;
-  roll_count: number;
   avg_heart_rate: number;
   calories: number;
   type: string;

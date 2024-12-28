@@ -8,22 +8,31 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Belt, useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useSessions } from '../hooks/useSessions/useSessions.ts';
+import { convertDurationToSeconds } from '../utilities/duration.tsx';
 
 const schema = yup.object({
   date: yup.string().required(),
   duration: yup.string().required(),
   coach: yup.number(),
-  roll_count: yup.number(),
   avg_heart_rate: yup.number(),
   calories: yup.number(),
   type: yup.string(),
 });
 
-// TODO: rolls get added separately with the resulting id from the new session.
 export const SessionForm = ({
   onSuccess,
+  initialValues,
+  id,
 }: {
   onSuccess: ({ id }: { id: number }) => void;
+  initialValues?: {
+    date?: string;
+    duration?: string;
+    coach?: number;
+    avg_heart_rate?: number;
+    calories?: number;
+  };
+  id?: number;
 }) => {
   const [newTeamMemberDialog, setNewTeamMemberDialog] = useState<{
     isOpen: boolean;
@@ -37,7 +46,7 @@ export const SessionForm = ({
     isCoach: false,
   });
 
-  const { createSession } = useSessions();
+  const { createSession, updateSession } = useSessions();
   const { data: team } = useTeammates();
 
   const coaches =
@@ -52,28 +61,27 @@ export const SessionForm = ({
     <>
       <Formik
         initialValues={{
-          date: dayjs().format('YYYY-MM-DD'),
-          duration: '01:00:00',
-          coach: '',
-          roll_count: '',
-          avg_heart_rate: '',
-          calories: '',
+          date: initialValues?.date ?? dayjs().format('YYYY-MM-DD'),
+          duration: initialValues?.duration ?? '01:00:00',
+          coach: initialValues?.coach ?? '',
+          avg_heart_rate: initialValues?.avg_heart_rate ?? '',
+          calories: initialValues?.calories ?? '',
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
-          const [hours = 0, minutes = 0, seconds = 0] =
-            values?.duration?.split(':') || [];
-
-          const { data } = await createSession({
+          const req = {
             date: values.date,
             coach: values.coach ? +values.coach : undefined,
-            roll_count: values.roll_count ? +values.roll_count : undefined,
             avg_heart_rate: values.avg_heart_rate
               ? +values.avg_heart_rate
               : undefined,
-            duration_seconds: +hours * 60 * 60 + +minutes * 60 + +seconds,
+            duration_seconds: convertDurationToSeconds(values.duration),
             calories: values.calories ? +values.calories : undefined,
-          });
+          };
+
+          const { data } = id
+            ? await updateSession(id, req)
+            : await createSession(req);
           if (!!onSuccess && data) {
             onSuccess(data);
           }
@@ -147,10 +155,6 @@ export const SessionForm = ({
                   </Dialog.Content>
                 </Dialog.Portal>
               </Dialog.Root>
-              <label>
-                <p>Roll Count</p>
-                <Field type={'number'} name={'roll_count'} />
-              </label>
               <label>
                 <p>Avg Heart Rate</p>
                 <Field type={'number'} name={'avg_heart_rate'} />

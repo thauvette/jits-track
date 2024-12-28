@@ -5,7 +5,6 @@ export const formatSession = (session: SessionResponseItem) => ({
   created: session.created_at,
   durationSeconds: session.duration_seconds,
   coach: session.coach,
-  rollCount: session.roll_count,
   avgHeartRate: session.avg_heart_rate,
   calories: session.calories,
   type: session.type,
