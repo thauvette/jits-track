@@ -84,7 +84,8 @@ export const Session = () => {
 
   return (
     <div className={'p-4'}>
-      <h1 className={'text-xl my-4'}>
+      {session?.type && <p className={'text-sm'}>{session.type}</p>}
+      <h1 className={'text-xl mb-4'}>
         {dayjs(session?.date).format('dddd MMMM DD YYYY')}{' '}
       </h1>
       <div className={'space-y-4 border-b pb-4 mb-4'}>

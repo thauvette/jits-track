@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+    body {
+        @apply text-purple-950 bg-grey-50 bg-opacity-50;
+    }
     input, select, textarea {
         @apply border border-[#cccccc] px-4 py-1 rounded-md;
         &:not([type="checkbox"]) {

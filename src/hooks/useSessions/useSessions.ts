@@ -3,6 +3,7 @@ import { useSupabase } from '../useSupabase.ts';
 import { useRolls } from '../useRolls.ts';
 import { SessionRequestBody, SessionResponseItem } from './types.ts';
 import { formatSession } from './utils.ts';
+import dayjs from 'dayjs';
 
 // TODO: add date range query
 export const useSessions = (id?: number) => {
@@ -77,7 +78,9 @@ export const useSessions = (id?: number) => {
   });
 
   return {
-    data: hydratedSessions,
+    data: hydratedSessions?.sort((a, b) =>
+      dayjs(b.date).isBefore(a.date) ? -1 : 1,
+    ),
     isLoading,
     error,
     createSession,

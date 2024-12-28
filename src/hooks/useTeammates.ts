@@ -40,6 +40,7 @@ export const useTeammates = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['team'],
     queryFn: getTeammates,
+    staleTime: 1000 * 60 * 10,
   });
 
   // add mutation
