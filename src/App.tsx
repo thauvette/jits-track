@@ -3,14 +3,15 @@ import { Router } from './routes/Router.tsx';
 import { LoginForm } from './components/LoginForm.tsx';
 import { useSupabase } from './hooks/useSupabase.ts';
 import { Header } from './components/Header.tsx';
+import { LoadingSpinner } from './components/LoadingSpinner.tsx';
 
 function App() {
   const { isAuthenticated, isLoading } = useSupabase();
 
   if (isLoading) {
     return (
-      <div>
-        <p>TODO: loading</p>
+      <div className={'flex items-center justify-center py-8'}>
+        <LoadingSpinner className={'size-10'} />
       </div>
     );
   }

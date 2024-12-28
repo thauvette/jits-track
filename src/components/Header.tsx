@@ -7,19 +7,16 @@ export const Header = () => {
   const { logout } = useSupabase();
   return (
     <header
-      className={'bg-purple-900 text-orange-50 py-3 px-2 flex items-center'}
+      className={'bg-purple-950 text-orange-200 py-3 px-2 flex items-center'}
     >
       <Link to={'/'}>
-        <HomeIcon className='size-4' />
+        <HomeIcon className='size-6' />
       </Link>
       <div className='ml-auto'>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button
-              className='IconButton ml-auto'
-              aria-label='Customise options'
-            >
-              <HamburgerMenuIcon />
+            <button className='ml-auto' aria-label='Customise options'>
+              <HamburgerMenuIcon className={'size-6'} />
             </button>
           </DropdownMenu.Trigger>
 

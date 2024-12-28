@@ -10,6 +10,7 @@ import { convertSecondsToDuration } from '../../utilities/duration.tsx';
 import { SessionForm } from '../../components/SessionForm.tsx';
 import { useTeammates } from '../../hooks/useTeammates.ts';
 import { Modal } from '../../components/Modal.tsx';
+import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
 
 export const Session = () => {
   const { id } = useParams();
@@ -43,8 +44,8 @@ export const Session = () => {
 
   if (isLoading) {
     return (
-      <div className={'p-4'}>
-        <p>TODO: loading</p>
+      <div className={'p-4 flex items-center justify-center'}>
+        <LoadingSpinner className={'size-10'} />
       </div>
     );
   }

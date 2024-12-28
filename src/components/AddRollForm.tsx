@@ -61,7 +61,7 @@ export const AddRollForm = ({
     >
       {({ handleSubmit, values, setFieldValue }) => {
         return (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className={'space-y-4'}>
             {hideDate && initialValues?.date ? null : (
               <div>
                 <label>
@@ -133,7 +133,7 @@ export const AddRollForm = ({
             </div>
             <div>
               <button type={'submit'} className={'primary'}>
-                Add
+                Add Roll
               </button>
             </div>
           </form>

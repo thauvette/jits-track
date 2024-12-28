@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { SessionForm } from '../../components/SessionForm.tsx';
 import { useSessions } from '../../hooks/useSessions/useSessions.ts';
 import { Session } from './Session.tsx';
+import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
 
 export const SessionRoutes = () => {
   const { data: sessions, isLoading } = useSessions();
@@ -15,10 +16,16 @@ export const SessionRoutes = () => {
         path={'/'}
         index
         element={
-          <>
-            <h1>Sessions</h1>
-            <Link to={'create'}>+ Add New</Link>
-            {isLoading && <p>Loading...</p>}
+          <div className={'p-4'}>
+            <h1 className={'my-4 text-xl font-bold'}>Sessions</h1>
+            <Link to={'create'} className={'primary'}>
+              + Add New
+            </Link>
+            {isLoading && (
+              <div className={'flex items-center justify-center p-4'}>
+                <LoadingSpinner className={'size-8'} />
+              </div>
+            )}
 
             {sessions?.map((session) => {
               return (
@@ -34,7 +41,7 @@ export const SessionRoutes = () => {
                 </div>
               );
             })}
-          </>
+          </div>
         }
       />
       <Route path={'/:id'} element={<Session />} />

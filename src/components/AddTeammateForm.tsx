@@ -59,7 +59,7 @@ export const AddTeammateForm = ({
               </label>
             </div>
             <div className={'my-4'}>
-              <label className='flex gap-2'>
+              <label className='flex gap-2 items-center'>
                 <Field name={'isCoach'} type={'checkbox'} />
                 <p>Is Coach</p>
               </label>

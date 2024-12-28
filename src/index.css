@@ -4,7 +4,13 @@
 
 @layer base {
     input, select, textarea {
-        @apply border;
+        @apply border border-[#cccccc] px-4 py-1 rounded-md;
+        &:not([type="checkbox"]) {
+            @apply w-full;
+        }
+        &[type="checkbox"] {
+            @apply size-5;
+        }
     }
     button, a {
         &.primary {

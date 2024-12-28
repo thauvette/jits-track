@@ -31,6 +31,7 @@ export const SessionForm = ({
     coach?: number;
     avg_heart_rate?: number;
     calories?: number;
+    type?: string;
   };
   id?: number;
 }) => {
@@ -66,6 +67,7 @@ export const SessionForm = ({
           coach: initialValues?.coach ?? '',
           avg_heart_rate: initialValues?.avg_heart_rate ?? '',
           calories: initialValues?.calories ?? '',
+          type: initialValues?.type ?? '',
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
@@ -77,6 +79,7 @@ export const SessionForm = ({
               : undefined,
             duration_seconds: convertDurationToSeconds(values.duration),
             calories: values.calories ? +values.calories : undefined,
+            type: values.type ?? '',
           };
 
           const { data } = id
@@ -90,36 +93,50 @@ export const SessionForm = ({
       >
         {({ handleSubmit, setFieldValue, values }) => {
           return (
-            <form onSubmit={handleSubmit}>
-              <label>
-                <p>Date</p>
-                <Field name={'date'} type={'date'} />
-              </label>
-              <label>
-                <p>Duration</p>
-                <Field type={'time'} name={'duration'} step='1' />
-              </label>
-              <label>
-                <p>Coach</p>
-                <CreatableSelect
-                  options={coaches}
-                  name={'coach'}
-                  isSearchable
-                  isClearable
-                  value={coaches?.find(({ value }) => value === +values.coach)}
-                  onCreateOption={(option) => {
-                    setNewTeamMemberDialog({
-                      isOpen: true,
-                      name: option,
-                      belt: 5,
-                      isCoach: true,
-                    });
-                  }}
-                  onChange={async (option) => {
-                    await setFieldValue('coach', option?.value ?? '');
-                  }}
-                />
-              </label>
+            <form onSubmit={handleSubmit} className={'space-y-4'}>
+              <div>
+                <label>
+                  <p>Date</p>
+                  <Field name={'date'} type={'date'} />
+                </label>
+              </div>
+              <div>
+                <label>
+                  <p>Type (eg: Class, Open Mat)</p>
+                  <Field name={'type'} />
+                </label>
+              </div>
+              <div>
+                <label>
+                  <p>Duration</p>
+                  <Field type={'time'} name={'duration'} step='1' />
+                </label>
+              </div>
+              <div>
+                <label>
+                  <p>Coach</p>
+                  <CreatableSelect
+                    options={coaches}
+                    name={'coach'}
+                    isSearchable
+                    isClearable
+                    value={coaches?.find(
+                      ({ value }) => value === +values.coach,
+                    )}
+                    onCreateOption={(option) => {
+                      setNewTeamMemberDialog({
+                        isOpen: true,
+                        name: option,
+                        belt: 5,
+                        isCoach: true,
+                      });
+                    }}
+                    onChange={async (option) => {
+                      await setFieldValue('coach', option?.value ?? '');
+                    }}
+                  />
+                </label>
+              </div>
               <Dialog.Root
                 open={newTeamMemberDialog.isOpen}
                 onOpenChange={(isOpen) => {
@@ -155,14 +172,18 @@ export const SessionForm = ({
                   </Dialog.Content>
                 </Dialog.Portal>
               </Dialog.Root>
-              <label>
-                <p>Avg Heart Rate</p>
-                <Field type={'number'} name={'avg_heart_rate'} />
-              </label>
-              <label>
-                <p>Calories</p>
-                <Field type={'number'} name={'calories'} />
-              </label>
+              <div>
+                <label>
+                  <p>Avg Heart Rate</p>
+                  <Field type={'number'} name={'avg_heart_rate'} />
+                </label>
+              </div>
+              <div>
+                <label>
+                  <p>Calories</p>
+                  <Field type={'number'} name={'calories'} />
+                </label>
+              </div>
               <div className={'my-4'}>
                 <button className={'primary w-full'} type={'submit'}>
                   Save
