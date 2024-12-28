@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useSupabase } from '../hooks/useSupabase.ts';
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 
 export const LoginForm = () => {
   const { login } = useSupabase();
@@ -32,31 +33,38 @@ export const LoginForm = () => {
   };
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={'p-4'}>
       <label>
         <p>Email</p>
         <input name={'email'} type={'email'} required />
       </label>
-      <label className={'block'}>
+      <label className={'block '}>
         <p>Password</p>
-        <input
-          name={'password'}
-          type={showPassword ? 'text' : 'password'}
-          required
-        />
+        <div className={'relative'}>
+          <input
+            name={'password'}
+            type={showPassword ? 'text' : 'password'}
+            required
+          />
+          <button
+            type={'button'}
+            className={'absolute right-2 top-1/2 transform -translate-y-1/2'}
+            onClick={(event) => {
+              event.stopPropagation();
+              setShowPassword(!showPassword);
+            }}
+            aria-label={showPassword ? 'hide password' : 'show password'}
+          >
+            {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+          </button>
+        </div>
       </label>
-      <button
-        type={'button'}
-        onClick={() => {
-          setShowPassword(!showPassword);
-        }}
-        aria-label={showPassword ? 'hide password' : 'show password'}
-      >
-        Eye Icon
-      </button>
-      <div>
+
+      <div className={'pt-4'}>
         {state.error && <p>{state.error}</p>}
-        <button type='submit'>Login</button>
+        <button className={'primary w-full'} type='submit'>
+          Login
+        </button>
       </div>
     </form>
   );
