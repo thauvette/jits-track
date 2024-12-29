@@ -12,10 +12,11 @@ export const AddTeammateForm = ({
     name?: string;
     belt?: Belt;
     isCoach?: boolean;
+    id?: number;
   };
   onSuccess?: (result: Teammate) => void;
 }) => {
-  const { addTeammate } = useTeammates();
+  const { addTeammate, updateTeammate } = useTeammates();
   const schema = yup.object({
     name: yup.string().required(),
     belt: yup.number().min(1).max(5),
@@ -25,12 +26,15 @@ export const AddTeammateForm = ({
     <Formik
       initialValues={{
         name: initialValues?.name ?? '',
-        belt: initialValues?.belt ?? 0,
+        belt: initialValues?.belt ?? 1,
         isCoach: !!initialValues?.isCoach,
+        id: initialValues?.id ?? null,
       }}
       validationSchema={schema}
       onSubmit={async (values) => {
-        const result = await addTeammate(values);
+        const result = values.id
+          ? await updateTeammate(values)
+          : await addTeammate(values);
         if (onSuccess && result) {
           onSuccess(result);
         }

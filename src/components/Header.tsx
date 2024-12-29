@@ -22,11 +22,15 @@ export const Header = () => {
 
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className='DropdownMenuContent bg-white shadow-lg p-4'
+              className='min-w-64 bg-white shadow-lg p-4'
               sideOffset={5}
             >
-              <DropdownMenu.Item className='DropdownMenuItem'>
-                <button onClick={logout}>logout</button>
+              <DropdownMenu.Item className='px-1 py-2 mb-2'>
+                <Link to={'/team'}>My Team</Link>
+              </DropdownMenu.Item>
+              <hr />
+              <DropdownMenu.Item className='px-1 py-2'>
+                <button onClick={logout}>Logout</button>
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
