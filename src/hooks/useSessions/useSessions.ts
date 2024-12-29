@@ -11,7 +11,7 @@ export const useSessions = (props?: {
 }) => {
   const { id, dateRange } = props ?? {};
   const { supabase } = useSupabase();
-  const { data: rolls } = useRolls({});
+  const { data: rolls } = useRolls();
   const queryClient = useQueryClient();
   const queryKey: (string | number)[] = ['sessions'];
   if (id) {

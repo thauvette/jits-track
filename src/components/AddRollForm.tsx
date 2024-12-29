@@ -16,6 +16,7 @@ export const AddRollForm = ({
     session?: number;
     teammate?: number;
     date?: string;
+    nogi?: boolean;
   };
   onSuccess: (roll: Roll) => void;
   hideDate?: boolean;
@@ -47,12 +48,14 @@ export const AddRollForm = ({
         session: initialValues?.session ?? '',
         teammate: initialValues?.teammate ?? '',
         date: initialValues?.date ?? '',
+        nogi: initialValues?.nogi ?? false,
       }}
       onSubmit={async (values) => {
         const { data } = await addRoll({
           teammateId: +values.teammate,
           date: values.date,
           session: values.session ? +values.session : undefined,
+          nogi: !!values.nogi,
         });
         if (data && onSuccess) {
           onSuccess(data[0]);
@@ -130,6 +133,12 @@ export const AddRollForm = ({
                   </Dialog.Content>
                 </Dialog.Portal>
               </Dialog.Root>
+            </div>
+            <div>
+              <label className={'flex gap-2 items-center'}>
+                <Field name={'nogi'} type={'checkbox'} />
+                <p>Nogi</p>
+              </label>
             </div>
             <div>
               <button type={'submit'} className={'primary'}>

@@ -11,6 +11,7 @@ export interface Roll {
   created: string;
   date: string;
   session: number | undefined;
+  nogi: boolean;
   teammate?:
     | {
         belt: number;
@@ -59,6 +60,7 @@ export const useRolls = (props?: {
           created_at: string;
           date: string;
           session?: number;
+          nogi: boolean;
           Teammates?: {
             id: number;
             name: string;
@@ -72,6 +74,7 @@ export const useRolls = (props?: {
           created: roll.created_at,
           date: roll.date,
           session: roll.session,
+          nogi: roll.nogi,
           teammate: roll.Teammates
             ? {
                 ...roll.Teammates,
@@ -87,18 +90,22 @@ export const useRolls = (props?: {
     teammateId,
     date,
     session,
+    nogi,
   }: {
     teammateId: number;
     date: string;
     session?: number;
+    nogi: boolean;
   }) => {
     const req: {
       teammate_id: number;
       date: string;
       session?: number;
+      nogi: boolean;
     } = {
       teammate_id: teammateId,
       date,
+      nogi,
     };
     if (session) {
       req.session = session;

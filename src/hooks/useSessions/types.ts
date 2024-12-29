@@ -1,3 +1,5 @@
+import { Roll } from '../useRolls.ts';
+
 export interface SessionRequestBody {
   date: string; // YYYY-MM-DD
   duration_seconds?: number; // ux for start/end and convert
@@ -17,12 +19,5 @@ export interface SessionResponseItem {
   type: string;
   user_id: string;
   date: string;
-  Rolls?: {
-    id: number;
-    session: number;
-    owner_id: string;
-    date_time: string;
-    created_at: string;
-    teammate_id: number;
-  }[];
+  Rolls?: Roll[];
 }

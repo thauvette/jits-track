@@ -64,7 +64,7 @@ export const SessionRoutes = ({
                     <p>
                       Rolls:{' '}
                       {session.rolls
-                        ?.map((roll) => roll.teammate?.name ?? '')
+                        ?.map((roll) => `${roll.teammate?.name ?? ''}`)
                         .join(', ') || 'None logged'}
                     </p>
                   </div>

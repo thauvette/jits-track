@@ -140,11 +140,12 @@ export const Session = () => {
       {rolls?.length ? (
         <div className={'space-y-2 border-b pb-2 mb-2'}>
           <p>Logged Rolls: {rolls.length} </p>
-          {rolls.map(({ teammate, id }) => (
-            <div key={id} className={'flex items-center justify-between'}>
+          {rolls.map(({ teammate, id, nogi }) => (
+            <div key={id} className={'flex items-center gap-2'}>
               <p>{teammate?.name}</p>
+              <p>({nogi ? 'nogi' : 'gi'})</p>
               <button
-                className={'flex items-center'}
+                className={'flex items-center ml-auto'}
                 onClick={() => {
                   void removeRoll(id);
                 }}
