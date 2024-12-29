@@ -1,32 +1,57 @@
 import { useSupabase } from './useSupabase.ts';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { belts } from '../config/betls.ts';
 import { Belt } from './useTeammates.ts';
-
-export interface Roll {
-  id: number;
-  teammate?: {
-    name: string;
-    belt: Belt;
-    id: number;
-    beltName: string;
-  };
-}
 
 const rollSelect = `*, Teammates(
             id, name, belt
         )`;
 
-export const useRolls = ({ sessionId }: { sessionId?: number }) => {
+export interface Roll {
+  id: number;
+  created: string;
+  date: string;
+  session: number | undefined;
+  teammate?:
+    | {
+        belt: Belt;
+        name: string;
+        id: number;
+        beltName: string;
+      }
+    | null
+    | undefined;
+}
+
+export const useRolls = (props?: {
+  sessionId?: number;
+  dateRange?: [string, string];
+}) => {
+  const { sessionId, dateRange } = props ?? {};
+
   const { supabase } = useSupabase();
+  const queryKey: (string | number)[] = ['rolls'];
+  if (sessionId) {
+    queryKey.push(sessionId);
+  }
+  if (dateRange) {
+    queryKey.push(...dateRange);
+  }
+
+  const queryClient = useQueryClient();
 
   const queryData = useQuery({
     staleTime: 1000 * 60 * 10,
-    queryKey: ['rolls', sessionId],
+    queryKey,
     queryFn: async () => {
       const query = supabase.from('Rolls').select(rollSelect);
       if (sessionId) {
         query.eq('session', sessionId);
+      }
+
+      if (dateRange) {
+        query.gte('date', dateRange[0]);
+        query.lte('date', dateRange[1]);
       }
 
       const { data } = await query.returns<
@@ -84,7 +109,9 @@ export const useRolls = ({ sessionId }: { sessionId?: number }) => {
       .insert(req)
       .select(rollSelect);
     if (data) {
-      void queryData.refetch();
+      await queryClient.invalidateQueries({
+        queryKey: ['rolls'],
+      });
     }
     return { data, error };
   };
@@ -102,7 +129,9 @@ export const useRolls = ({ sessionId }: { sessionId?: number }) => {
     }
 
     if (!error) {
-      void queryData.refetch();
+      await queryClient.invalidateQueries({
+        queryKey: ['rolls'],
+      });
     }
     return {
       error,

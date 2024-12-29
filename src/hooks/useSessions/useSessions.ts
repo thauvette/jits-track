@@ -5,13 +5,25 @@ import { SessionRequestBody, SessionResponseItem } from './types.ts';
 import { formatSession } from './utils.ts';
 import dayjs from 'dayjs';
 
-// TODO: add date range query
-export const useSessions = (id?: number) => {
+export const useSessions = (props?: {
+  id?: number;
+  dateRange?: [string, string];
+}) => {
+  const { id, dateRange } = props ?? {};
   const { supabase } = useSupabase();
   const { data: rolls } = useRolls({});
   const queryClient = useQueryClient();
+  const queryKey: (string | number)[] = ['sessions'];
+  if (id) {
+    queryKey.push(id);
+  }
+  if (dateRange) {
+    queryKey.push(...dateRange);
+  }
+
   const { data, isLoading, error, refetch } = useQuery({
     staleTime: 1000 * 60 * 10,
+    queryKey,
     queryFn: async () => {
       const query = supabase.from('Sessions').select(`*, Rolls(*)`);
 
@@ -19,11 +31,15 @@ export const useSessions = (id?: number) => {
         query.eq('id', id);
       }
 
+      if (dateRange) {
+        query.gte('date', dateRange[0]);
+        query.lte('date', dateRange[1]);
+      }
+
       const { data: response } = await query.returns<SessionResponseItem[]>();
 
       return response?.map(formatSession);
     },
-    queryKey: ['sessions', id],
   });
 
   const createSession = async (req: SessionRequestBody) => {

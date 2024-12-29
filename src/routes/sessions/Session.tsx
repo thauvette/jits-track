@@ -23,7 +23,7 @@ export const Session = () => {
     isLoading,
     refetch,
     deleteSession,
-  } = useSessions(id ? +id : undefined);
+  } = useSessions({ id: id ? +id : undefined });
   const { data: teammates } = useTeammates();
   const session = sessions?.[0];
   const [showingRollForm, setShowingRollForm] = useState(false);
