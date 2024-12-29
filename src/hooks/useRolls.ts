@@ -1,7 +1,6 @@
 import { useSupabase } from './useSupabase.ts';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { belts } from '../config/betls.ts';
-import { Belt } from './useTeammates.ts';
 
 const rollSelect = `*, Teammates(
             id, name, belt
@@ -14,7 +13,7 @@ export interface Roll {
   session: number | undefined;
   teammate?:
     | {
-        belt: Belt;
+        belt: number;
         name: string;
         id: number;
         beltName: string;

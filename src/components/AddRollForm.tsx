@@ -3,7 +3,7 @@ import CreatableSelect from 'react-select/creatable';
 import * as Dialog from '@radix-ui/react-dialog';
 
 import { Roll, useRolls } from '../hooks/useRolls.ts';
-import { Belt, useTeammates } from '../hooks/useTeammates.ts';
+import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useState } from 'react';
 
@@ -27,7 +27,7 @@ export const AddRollForm = ({
   const [newTeamMemberDialog, setNewTeamMemberDialog] = useState<{
     isOpen: boolean;
     name: string;
-    belt: Belt | null;
+    belt: number | null;
     isCoach: boolean;
   }>({
     isOpen: false,

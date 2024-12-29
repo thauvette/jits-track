@@ -1,7 +1,7 @@
 import { Field, Formik } from 'formik';
 import * as yup from 'yup';
 
-import { Belt, Teammate, useTeammates } from '../hooks/useTeammates.ts';
+import { Teammate, useTeammates } from '../hooks/useTeammates.ts';
 import { belts } from '../config/betls.ts';
 
 export const AddTeammateForm = ({
@@ -10,7 +10,7 @@ export const AddTeammateForm = ({
 }: {
   initialValues?: {
     name?: string;
-    belt?: Belt;
+    belt?: number;
     isCoach?: boolean;
     id?: number;
   };

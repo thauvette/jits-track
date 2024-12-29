@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import CreatableSelect from 'react-select/creatable';
 import * as Dialog from '@radix-ui/react-dialog';
 
-import { Belt, useTeammates } from '../hooks/useTeammates.ts';
+import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useSessions } from '../hooks/useSessions/useSessions.ts';
 import { convertDurationToSeconds } from '../utilities/duration.tsx';
@@ -38,7 +38,7 @@ export const SessionForm = ({
   const [newTeamMemberDialog, setNewTeamMemberDialog] = useState<{
     isOpen: boolean;
     name: string;
-    belt: Belt | null;
+    belt: number | null;
     isCoach: boolean;
   }>({
     isOpen: false,
