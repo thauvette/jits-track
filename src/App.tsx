@@ -1,9 +1,11 @@
+import { Route, Routes } from 'react-router';
 import './App.css';
 import { Router } from './routes/Router.tsx';
 import { LoginForm } from './components/LoginForm.tsx';
 import { useSupabase } from './hooks/useSupabase.ts';
 import { Header } from './components/Header.tsx';
 import { LoadingSpinner } from './components/LoadingSpinner.tsx';
+import { ResetPasswordForm } from './components/ResetPasswordForm.tsx';
 
 function App() {
   const { isAuthenticated, isLoading } = useSupabase();
@@ -25,10 +27,18 @@ function App() {
   }
 
   return (
-    <>
-      <Header />
-      <Router />
-    </>
+    <Routes>
+      <Route path={'reset-password'} element={<ResetPasswordForm />} />
+      <Route
+        path={'*'}
+        element={
+          <>
+            <Header />
+            <Router />
+          </>
+        }
+      />
+    </Routes>
   );
 }
 

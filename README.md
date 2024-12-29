@@ -10,7 +10,6 @@ VITE_SUPABASE_PUB_KEY=
 #  TODOs: 
 - optimistic ui on changes and/or loading states
 - toasts for errors 
-- generic loader 
 
 # React + TypeScript + Vite
 
