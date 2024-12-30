@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createClient, Session } from '@supabase/supabase-js';
+import { useQueryClient } from '@tanstack/react-query';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -9,7 +10,7 @@ const supabase = createClient(
 export const useSupabase = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     supabase.auth
       .getSession()
@@ -33,6 +34,7 @@ export const useSupabase = () => {
     setIsLoading(true);
     await supabase.auth.signOut();
     setIsLoading(false);
+    await queryClient.resetQueries();
   };
 
   const login = async (email: string, password: string) => {
@@ -41,6 +43,7 @@ export const useSupabase = () => {
       email,
       password,
     });
+    await queryClient.resetQueries();
     setIsLoading(false);
     return {
       error,
