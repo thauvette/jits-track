@@ -26,18 +26,23 @@ export interface Roll {
 export const useRolls = (props?: {
   sessionId?: number;
   dateRange?: [string, string];
+  teamId?: number;
 }) => {
-  const { sessionId, dateRange } = props ?? {};
+  const { sessionId, dateRange, teamId } = props ?? {};
 
   const { supabase } = useSupabase();
-  const queryKey: (string | number)[] = ['rolls'];
+  const queryKey: (string | number | { [key: string]: string | number })[] = [
+    'rolls',
+  ];
   if (sessionId) {
     queryKey.push(sessionId);
   }
   if (dateRange) {
     queryKey.push(...dateRange);
   }
-
+  if (teamId) {
+    queryKey.push({ teamId });
+  }
   const queryClient = useQueryClient();
 
   const queryData = useQuery({
@@ -53,7 +58,9 @@ export const useRolls = (props?: {
         query.gte('date', dateRange[0]);
         query.lte('date', dateRange[1]);
       }
-
+      if (teamId) {
+        query.eq('teammate_id', teamId);
+      }
       const { data } = await query.returns<
         {
           id: number;

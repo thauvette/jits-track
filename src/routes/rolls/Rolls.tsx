@@ -34,7 +34,7 @@ export const Rolls = ({
       const teamKey = teammate?.name ?? 'notListed';
       const currentTeam = obj.teammate[teamKey] || [];
       currentTeam.push(roll);
-      const dateKey = dayjs(date).format('MMMM DD YYYY');
+      const dateKey = dayjs(date).format('ddd MMM DD YYYY');
       const currentDate = obj.date[dateKey] ?? [];
       currentDate.push(roll);
 
