@@ -1,5 +1,6 @@
-import { useSupabase } from './useSupabase.ts';
+import toast from 'react-hot-toast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSupabase } from './useSupabase.ts';
 import { belts } from '../config/betls.ts';
 
 const rollSelect = `*, Teammates(
@@ -93,30 +94,34 @@ export const useRolls = (props?: {
     },
   });
 
-  const addRoll = async ({
-    teammateId,
-    date,
-    session,
-    nogi,
-  }: {
+  interface RollReq {
     teammateId: number;
     date: string;
     session?: number;
     nogi: boolean;
-  }) => {
-    const req: {
-      teammate_id: number;
-      date: string;
-      session?: number;
-      nogi: boolean;
-    } = {
-      teammate_id: teammateId,
-      date,
-      nogi,
+  }
+  interface FormattedReq {
+    teammate_id: number;
+    date: string;
+    nogi: boolean;
+    session?: number;
+  }
+  const formatRoll = (roll: RollReq) => {
+    const result: FormattedReq = {
+      teammate_id: roll.teammateId,
+      date: roll.date,
+      nogi: roll.nogi,
     };
-    if (session) {
-      req.session = session;
+    if (roll.session) {
+      result.session = roll.session;
     }
+    return result;
+  };
+
+  const addRoll = async (rolls: RollReq | RollReq[]) => {
+    const req = Array.isArray(rolls)
+      ? rolls.map(formatRoll)
+      : formatRoll(rolls);
     const { data, error } = await supabase
       .from('Rolls')
       .insert(req)
@@ -138,7 +143,7 @@ export const useRolls = (props?: {
 
     if (!data?.length) {
       // TODO: error toast
-      alert('NEWP');
+      toast.error('NEWP');
     }
 
     if (!error) {

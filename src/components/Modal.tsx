@@ -8,18 +8,28 @@ export const Modal = ({
   title,
   trigger,
   children,
+  onClose,
 }: {
   title: string;
   trigger: ReactNode;
   renderChildren?: ({ closeModal }: { closeModal: () => void }) => ReactNode;
   children?: ReactNode;
+  onClose?: () => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = useCallback(() => {
     setIsOpen(false);
   }, []);
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (onClose && !open) {
+          onClose();
+        }
+      }}
+    >
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='DialogOverlay' />

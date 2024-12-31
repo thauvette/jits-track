@@ -8,10 +8,15 @@ export const convertSecondsToDuration = (durationSeconds: number) => {
 };
 
 export const convertDurationToSeconds = (duration: string) => {
-  const arr = duration?.split(':') || [];
-  const hours = new Big(arr[0] ?? 0).times(3600);
-  const minutes = new Big(arr[1] ?? 0).times(60);
-  const seconds = new Big(arr[2] ?? 0);
-  const result = hours.add(minutes).add(seconds);
-  return result.toNumber();
+  try {
+    const arr = duration?.split(':') || [];
+    const hours = new Big(arr[0] ?? 0).times(3600);
+    const minutes = new Big(arr[1] ?? 0).times(60);
+    const seconds = new Big(arr[2] ?? 0);
+    const result = hours.add(minutes).add(seconds);
+    return result.toNumber();
+    // eslint-disable-next-line
+  } catch (error) {
+    return 0;
+  }
 };

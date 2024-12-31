@@ -7,6 +7,7 @@ import { useSessions } from '../../hooks/useSessions/useSessions.ts';
 import { Session } from './Session.tsx';
 import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
+import { ImportSessions } from './ImportSessions/ImportSessions.tsx';
 
 export const SessionRoutes = ({
   dates,
@@ -35,12 +36,15 @@ export const SessionRoutes = ({
           <>
             <DatesHeader dates={dates} setDates={setDates} />
             <div className={'p-4'}>
-              <div className={'mb-4 flex items-center justify-between'}>
+              <div className={'flex items-center justify-between'}>
                 <h1 className={'text-xl font-bold'}>Sessions</h1>
                 <Link to={'create'} className={'underline'}>
                   + Add New
                 </Link>
               </div>
+              <Link to={'import'} className={'underline text-sm'}>
+                Import from csv
+              </Link>
               {isLoading && (
                 <div className={'flex items-center justify-center p-4'}>
                   <LoadingSpinner className={'size-8'} />
@@ -87,6 +91,7 @@ export const SessionRoutes = ({
           </div>
         }
       />
+      <Route path={'import'} element={<ImportSessions />} />
     </Routes>
   );
 };
