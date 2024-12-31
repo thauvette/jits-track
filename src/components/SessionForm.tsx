@@ -17,6 +17,7 @@ const schema = yup.object({
   avg_heart_rate: yup.number(),
   calories: yup.number(),
   type: yup.string(),
+  rollCount: yup.number(),
 });
 
 export const SessionForm = ({
@@ -32,6 +33,7 @@ export const SessionForm = ({
     avg_heart_rate?: number;
     calories?: number;
     type?: string;
+    rollCount?: number;
   };
   id?: number;
 }) => {
@@ -68,6 +70,7 @@ export const SessionForm = ({
           avg_heart_rate: initialValues?.avg_heart_rate ?? '',
           calories: initialValues?.calories ?? '',
           type: initialValues?.type ?? '',
+          roll_count: initialValues?.rollCount ?? 0,
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
@@ -80,6 +83,7 @@ export const SessionForm = ({
             duration_seconds: convertDurationToSeconds(values.duration),
             calories: values.calories ? +values.calories : undefined,
             type: values.type ?? '',
+            roll_count: values.roll_count,
           };
 
           const { data } = id
@@ -172,6 +176,10 @@ export const SessionForm = ({
                   </Dialog.Content>
                 </Dialog.Portal>
               </Dialog.Root>
+              <div>
+                <label>Roll Count</label>
+                <Field type={'number'} name={'roll_count'} />
+              </div>
               <div>
                 <label>
                   <p>Avg Heart Rate</p>

@@ -9,4 +9,5 @@ export const formatSession = (session: SessionResponseItem) => ({
   calories: session.calories,
   type: session.type,
   date: session.date,
+  rollCount: session.roll_count,
 });

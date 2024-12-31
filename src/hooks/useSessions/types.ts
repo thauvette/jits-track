@@ -7,6 +7,7 @@ export interface SessionRequestBody {
   avg_heart_rate?: number;
   calories?: number;
   type?: string;
+  roll_count: number;
 }
 
 export interface SessionResponseItem {
@@ -19,5 +20,6 @@ export interface SessionResponseItem {
   type: string;
   user_id: string;
   date: string;
+  roll_count: number;
   Rolls?: Roll[];
 }

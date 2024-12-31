@@ -90,7 +90,7 @@ export const Session = () => {
       </h1>
       <div className={'space-y-4 border-b pb-4 mb-4'}>
         {coach?.name ? <p>Coach: {coach.name}</p> : null}
-
+        <p>Roll Count: {session?.rollCount ?? 0}</p>
         {session?.avgHeartRate ? (
           <p>Avg Heart Rate: {session.avgHeartRate}</p>
         ) : null}

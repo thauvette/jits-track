@@ -1,16 +1,24 @@
 import toast from 'react-hot-toast';
+import { set } from 'lodash';
 import { convertDurationToSeconds } from '../../../utilities/duration.tsx';
 import { useRef, useState } from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Row } from './Row.tsx';
 import { ImportedSession } from './types.ts';
 import { useTeammates } from '../../../hooks/useTeammates.ts';
+import { AddCoachForm } from './AddCoachForm.tsx';
+import { useQueryClient } from '@tanstack/react-query';
+
+// TODO:
+//  - coach
+//  - trim names on rolls
 
 export const ImportSessions = () => {
   const [imported, setImported] = useState<ImportedSession[] | null>(null);
   const [activeImportIndex, setActiveImportIndex] = useState(0);
   const [isImporting, setIsImporting] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const queryClient = useQueryClient();
   useTeammates();
   const convertFile = (file: File) => {
     const reader = new FileReader();
@@ -40,16 +48,24 @@ export const ImportSessions = () => {
             ? +data[headers.indexOf('calories')]
             : null;
           const rolls = data[headers.indexOf('rolls')];
+          const rollCount = data[headers.indexOf('roll count')];
           const nogiRolls = data[headers.indexOf('nogi')];
           const isNogi = !!(nogiRolls && +nogiRolls);
+          const coach = data[headers.indexOf('coach')];
           arr.push({
             date,
             duration: duration ? convertDurationToSeconds(duration) : null,
-            coach: data[headers.indexOf('coach')],
+            coachName: coach ? coach.trim() : undefined,
             avg_heart_rate: heart,
             calories: calories,
             type: data[headers.indexOf('type')],
-            rolls: rolls ? rolls.split(',') : null,
+            rollCount: rollCount ? +rollCount : undefined,
+            rolls: rolls
+              ? rolls
+                  .split(',')
+                  .map((name) => name.trim())
+                  .filter((name) => !!name)
+              : null,
             isNogi,
           });
 
@@ -57,8 +73,11 @@ export const ImportSessions = () => {
         }, []);
         setImported(sessions);
       } catch (err) {
-        console.log(err);
-        toast.error('Error parsing file');
+        let message = 'Error parsing file';
+        if (err instanceof Error && err.message) {
+          message = err.message;
+        }
+        toast.error(message);
       }
     };
     reader.readAsText(file);
@@ -72,57 +91,123 @@ export const ImportSessions = () => {
     setActiveImportIndex(0);
   };
 
+  // imported coaches without matching id
+  const newCoaches = imported
+    ? imported?.reduce<{
+        [key: string]: {
+          items: number[];
+          coachId: null;
+          name: string;
+        };
+      }>((obj, item, index) => {
+        const key = item.coachName?.trim() ?? null;
+        if (!key || item.coachId) {
+          return obj;
+        }
+
+        const currentItems = obj[key]?.items ?? [];
+        currentItems.push(index);
+
+        return {
+          ...obj,
+          [key]: {
+            items: currentItems,
+            coachId: null,
+            name: key,
+          },
+        };
+      }, {})
+    : null;
+
   return (
     <div className={'p-4'}>
       <h1 className={'text-xl font-bold mb-4'}>Import Sessions</h1>
+
       {imported ? (
         <div>
-          <p>{imported.length} sessions ready to import</p>
-          <div className={'flex gap-4 items-center py-4'}>
-            <button
-              className={'primary'}
-              onClick={() => {
-                setIsImporting(true);
-              }}
-            >
-              Start Import
-            </button>
-            <button className={'warn'} onClick={reset}>
-              Reset
-            </button>
-          </div>
-          <div className={'grid grid-cols-6 text-sm gap-y-4'}>
-            <p>date</p>
-            <p>type</p>
-            <p>coach</p>
-            <p>Rolls</p>
-            <p>nogi?</p>
+          <p className={'mb-4'}>{imported.length} Sessions to import</p>
 
-            {imported.map((item, index) => (
-              <Row
-                item={item}
-                key={index}
-                isActive={isImporting && index === activeImportIndex}
-                onSuccess={() => {
-                  if (index + 1 === imported.length) {
-                    setIsImporting(false);
-                    setActiveImportIndex(0);
-                    return;
-                  }
-                  setActiveImportIndex(index + 1);
-                }}
-                onError={() => {
-                  if (index + 1 === imported.length) {
-                    // index = 0, length 2 (0,1),
-                    setIsImporting(false);
-                    setActiveImportIndex(0);
-                    return;
-                  }
-                  setActiveImportIndex(index + 1);
+          {Object.keys(newCoaches ?? {}).length ? (
+            <div className={'pt-4'}>
+              <p>
+                {Object.keys(newCoaches ?? {}).length} coaches need to be
+                matched or reviewed
+              </p>
+              <div className={'my-4'}>
+                <button className={'warn'} onClick={reset}>
+                  Reset
+                </button>
+              </div>
+              <AddCoachForm
+                coaches={Object.values(newCoaches || {})}
+                handleSubmit={(results) => {
+                  const current = structuredClone(imported);
+                  results.forEach((coach) => {
+                    coach.items.forEach((index) => {
+                      set(current, [index, 'coachId'], coach.coachId);
+                    });
+                  });
+                  setImported(current);
                 }}
               />
-            ))}
-          </div>
+            </div>
+          ) : (
+            <>
+              <div className={'flex gap-4 items-center py-4'}>
+                <button
+                  className={'primary'}
+                  onClick={() => {
+                    setIsImporting(true);
+                  }}
+                >
+                  Start Import
+                </button>
+                <button className={'warn'} onClick={reset}>
+                  Reset
+                </button>
+              </div>
+              <div className={'grid grid-cols-6 text-sm gap-y-4'}>
+                <p>date</p>
+                <p>type</p>
+                <p>coach</p>
+                <p>Rolls</p>
+                <p>nogi?</p>
+
+                {imported.map((item, index) => (
+                  <Row
+                    item={item}
+                    key={index}
+                    isActive={isImporting && index === activeImportIndex}
+                    onSuccess={() => {
+                      if (index + 1 === imported.length) {
+                        setIsImporting(false);
+                        setActiveImportIndex(0);
+                        // invalidate session queries
+                        void queryClient.invalidateQueries({
+                          queryKey: ['sessions'],
+                        });
+                        return;
+                      }
+                      setActiveImportIndex(index + 1);
+                    }}
+                    onError={() => {
+                      if (index + 1 === imported.length) {
+                        // index = 0, length 2 (0,1),
+                        setIsImporting(false);
+                        setActiveImportIndex(0);
+                        // invalidate session queries
+                        void queryClient.invalidateQueries({
+                          queryKey: ['sessions'],
+                        });
+                        return;
+                      }
+                      setActiveImportIndex(index + 1);
+                    }}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <>

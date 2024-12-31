@@ -1,7 +1,8 @@
 export interface ImportedSession {
   date: string;
   duration?: number | null;
-  coach?: string;
+  coachId?: number;
+  coachName?: string;
   avg_heart_rate?: number | null;
   calories?: number | null;
   type?: string;
@@ -9,4 +10,5 @@ export interface ImportedSession {
   isNogi: boolean;
   error?: boolean;
   success?: boolean;
+  rollCount?: number;
 }

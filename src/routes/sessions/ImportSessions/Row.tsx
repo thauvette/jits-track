@@ -30,6 +30,7 @@ export const Row = ({
     isOpen: false,
     sessionId: null,
   });
+
   const { createSession } = useSessions();
   // pop a modal for rolls?
   // try to match name to teammate,
@@ -38,14 +39,20 @@ export const Row = ({
   const start = useCallback(async () => {
     setStatus('pending');
     try {
-      const { data, error } = await createSession({
-        date: item.date,
-        duration_seconds: item.duration ?? undefined,
-        coach: item.coach ? +item.coach : undefined,
-        avg_heart_rate: item.avg_heart_rate ? +item.avg_heart_rate : undefined,
-        calories: item.calories ?? undefined,
-        type: item.type ?? '',
-      });
+      const { data, error } = await createSession(
+        {
+          date: item.date,
+          duration_seconds: item.duration ?? undefined,
+          coach: item.coachId ? +item.coachId : undefined,
+          avg_heart_rate: item.avg_heart_rate
+            ? +item.avg_heart_rate
+            : undefined,
+          calories: item.calories ?? undefined,
+          type: item.type ?? '',
+          roll_count: item.rollCount ?? 0,
+        },
+        true,
+      );
 
       if (error || !data) {
         setStatus('error');
@@ -83,7 +90,7 @@ export const Row = ({
     <>
       <p className={'col-start-1'}>{item.date}</p>
       <p>{item.type}</p>
-      <p>{item.coach}</p>
+      <p>{item.coachName}</p>
       <p>{item.rolls?.length ?? 0}</p>
       <p>{item.isNogi ? 'yes' : 'no'}</p>
       <div>

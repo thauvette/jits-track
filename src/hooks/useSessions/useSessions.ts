@@ -42,14 +42,17 @@ export const useSessions = (props?: {
     },
   });
 
-  const createSession = async (req: SessionRequestBody) => {
+  const createSession = async (
+    req: SessionRequestBody,
+    ignoreQueryInvalidation: boolean = false,
+  ) => {
     const { data, error } = await supabase
       .from('Sessions')
       .insert(req)
       .select()
       .returns<SessionResponseItem[]>();
 
-    if (data?.[0]) {
+    if (data?.[0] && !ignoreQueryInvalidation) {
       await queryClient.invalidateQueries({
         queryKey: ['sessions'],
       });
