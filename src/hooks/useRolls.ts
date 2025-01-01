@@ -95,13 +95,13 @@ export const useRolls = (props?: {
   });
 
   interface RollReq {
-    teammateId: number;
+    teammateId: number | null;
     date: string;
     session?: number;
     nogi: boolean;
   }
   interface FormattedReq {
-    teammate_id: number;
+    teammate_id: number | null;
     date: string;
     nogi: boolean;
     session?: number;
@@ -142,7 +142,6 @@ export const useRolls = (props?: {
       .select();
 
     if (!data?.length) {
-      // TODO: error toast
       toast.error('NEWP');
     }
 

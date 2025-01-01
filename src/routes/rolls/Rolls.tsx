@@ -1,6 +1,7 @@
-import { Roll, useRolls } from '../../hooks/useRolls.ts';
 import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { Roll, useRolls } from '../../hooks/useRolls.ts';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
 
 export const Rolls = ({
@@ -17,55 +18,57 @@ export const Rolls = ({
       dates.end.format('YYYY-MM-DD'),
     ],
   });
-  const grouped = rolls?.reduce<{
-    teammate: {
-      [key: string]: Roll[];
-    };
-    date: {
-      [key: string]: Roll[];
-    };
-    belts: {
-      [key: string]: Roll[];
-    };
-  }>(
-    (obj, roll) => {
-      const { date, teammate } = roll;
 
-      const teamKey = teammate?.name ?? 'notListed';
-      const currentTeam = obj.teammate[teamKey] || [];
-      currentTeam.push(roll);
-      const dateKey = dayjs(date).format('ddd MMM DD YYYY');
-      const currentDate = obj.date[dateKey] ?? [];
-      currentDate.push(roll);
-
-      const beltKey = teammate?.beltName ?? 'notListed';
-      const currentBelt = obj.belts[beltKey] || [];
-      currentBelt.push(roll);
-
-      return {
-        ...obj,
-        teammate: {
-          ...obj.teammate,
-          [teamKey]: currentTeam,
-        },
-        date: {
-          ...obj.date,
-          [dateKey]: currentDate,
-        },
-        belts: {
-          ...obj.belts,
-          [beltKey]: currentBelt,
-        },
+  const grouped = useMemo(() => {
+    return rolls?.reduce<{
+      teammate: {
+        [key: string]: Roll[];
       };
-    },
-    {
-      teammate: {},
-      date: {},
-      belts: {},
-    },
-  );
+      date: {
+        [key: string]: Roll[];
+      };
+      belts: {
+        [key: string]: Roll[];
+      };
+    }>(
+      (obj, roll) => {
+        const { date, teammate } = roll;
+        const teamKey = teammate?.name ?? 'notListed';
+        const currentTeam = obj.teammate[teamKey] || [];
+        currentTeam.push(roll);
+        const dateKey = dayjs(date).format('ddd MMM DD YYYY');
+        const currentDate = obj.date[dateKey] ?? [];
+        currentDate.push(roll);
+        const beltKey = teammate?.beltName ?? 'notListed';
+        const currentBelt = obj.belts[beltKey] || [];
+        currentBelt.push(roll);
+
+        return {
+          ...obj,
+          teammate: {
+            ...obj.teammate,
+            [teamKey]: currentTeam,
+          },
+          date: {
+            ...obj.date,
+            [dateKey]: currentDate,
+          },
+          belts: {
+            ...obj.belts,
+            [beltKey]: currentBelt,
+          },
+        };
+      },
+      {
+        teammate: {},
+        date: {},
+        belts: {},
+      },
+    );
+  }, [rolls]);
 
   const data = grouped?.[sortBy];
+
   const sortOptions: ('date' | 'belts' | 'teammate')[] = [
     'date',
     'belts',

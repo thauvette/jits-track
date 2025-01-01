@@ -7,9 +7,13 @@ VITE_SUPABASE_URL=
 VITE_SUPABASE_PUB_KEY=
 ```
 
+## Supabase migrations 
+- When making changes to local DB run `npx supabase db diff -f descriptive_name`
+- Then `npx supabase db push`
+
+
 #  TODOs: 
 - optimistic ui on changes and/or loading states
-- add roll_count to sessions and include it on import. 
 
 # React + TypeScript + Vite
 

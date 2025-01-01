@@ -27,14 +27,14 @@ export const Home = ({
     }, 0) || 0;
 
   return (
-    <>
+    <div className={'max-w-2xl mx-auto'}>
       <DatesHeader dates={dates} setDates={setDates} />
       <div className={'p-4'}>
         {isLoading ? (
           <LoadingSpinner />
         ) : (
           <div className={'space-y-4 divide-y'}>
-            <div className={'flex items-center '}>
+            <div className={'flex items-center py-2'}>
               {sessions?.length ? (
                 <p>
                   {sessions.length} session{sessions.length > 1 ? 's' : ''}
@@ -49,7 +49,7 @@ export const Home = ({
                 Sessions <ArrowRightIcon className={'size-4'} />{' '}
               </Link>
             </div>
-            <div className={'flex items-center '}>
+            <div className={'flex items-center py-2 pt-4'}>
               <p>
                 {rollCount} roll{rollCount === 1 ? '' : 's'}
               </p>
@@ -60,6 +60,6 @@ export const Home = ({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };

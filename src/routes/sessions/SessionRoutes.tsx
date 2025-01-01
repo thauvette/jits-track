@@ -1,6 +1,6 @@
 import { Link, Route, Routes, useNavigate } from 'react-router';
 import dayjs, { Dayjs } from 'dayjs';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 
 import { SessionForm } from '../../components/SessionForm.tsx';
 import { useSessions } from '../../hooks/useSessions/useSessions.ts';
@@ -57,18 +57,16 @@ export const SessionRoutes = ({
                     <p className={'text-sm'}>{session.type}</p>
                     <Link
                       to={`${session.id}`}
-                      className={
-                        'underline text-lg font-bold flex items-center gap-2'
-                      }
+                      className={'underline font-bold flex items-center gap-2'}
                     >
                       {dayjs(session.date).format('dddd, MMMM DD YYYY')}
                       <ArrowRightIcon className={'size-5'} />
                     </Link>
-
+                    <p>Roll Count: {session.rollCount}</p>
                     <p>
-                      Rolls:{' '}
+                      Logged Rolls:{' '}
                       {session.rolls
-                        ?.map((roll) => `${roll.teammate?.name ?? ''}`)
+                        ?.map((roll) => `${roll.teammate?.name ?? 'Unknown'}`)
                         .join(', ') || 'None logged'}
                     </p>
                   </div>
@@ -78,11 +76,26 @@ export const SessionRoutes = ({
           </>
         }
       />
-      <Route path={'/:id'} element={<Session />} />
+      <Route
+        path={'/:id'}
+        element={
+          <div className={'p-4'}>
+            <Link to={'/sessions'} className={'flex gap-2 items-center'}>
+              <ArrowLeftIcon /> Sessions
+            </Link>
+            <div className={'max-w-2xl  py-4'}>
+              <Session />
+            </div>
+          </div>
+        }
+      />
       <Route
         path={'/create'}
         element={
           <div className={'p-4'}>
+            <Link to={'/sessions'} className={'flex gap-2 items-center'}>
+              <ArrowLeftIcon /> Sessions
+            </Link>
             <SessionForm
               onSuccess={(result) => {
                 navigate(`/sessions/${result.id}`);
@@ -91,7 +104,17 @@ export const SessionRoutes = ({
           </div>
         }
       />
-      <Route path={'import'} element={<ImportSessions />} />
+      <Route
+        path={'import'}
+        element={
+          <div className={'p-4'}>
+            <Link to={'/sessions'} className={'flex gap-2 items-center'}>
+              <ArrowLeftIcon /> Sessions
+            </Link>
+            <ImportSessions />
+          </div>
+        }
+      />
     </Routes>
   );
 };

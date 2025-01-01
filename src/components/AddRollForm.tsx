@@ -52,7 +52,7 @@ export const AddRollForm = ({
       }}
       onSubmit={async (values) => {
         const { data } = await addRoll({
-          teammateId: +values.teammate,
+          teammateId: values.teammate ? +values.teammate : null,
           date: values.date,
           session: values.session ? +values.session : undefined,
           nogi: !!values.nogi,

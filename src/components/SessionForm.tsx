@@ -61,7 +61,8 @@ export const SessionForm = ({
       })) ?? [];
 
   return (
-    <>
+    <div className={'max-w-4xl mx-auto py-8'}>
+      <h1 className={'text-xl font-bold mb-6'}>New Session</h1>
       <Formik
         initialValues={{
           date: initialValues?.date ?? dayjs().format('YYYY-MM-DD'),
@@ -70,7 +71,7 @@ export const SessionForm = ({
           avg_heart_rate: initialValues?.avg_heart_rate ?? '',
           calories: initialValues?.calories ?? '',
           type: initialValues?.type ?? '',
-          roll_count: initialValues?.rollCount ?? 0,
+          roll_count: initialValues?.rollCount ?? '',
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
@@ -83,7 +84,7 @@ export const SessionForm = ({
             duration_seconds: convertDurationToSeconds(values.duration),
             calories: values.calories ? +values.calories : undefined,
             type: values.type ?? '',
-            roll_count: values.roll_count,
+            roll_count: values.roll_count ? +values.roll_count : 0,
           };
 
           const { data } = id
@@ -201,6 +202,6 @@ export const SessionForm = ({
           );
         }}
       </Formik>
-    </>
+    </div>
   );
 };

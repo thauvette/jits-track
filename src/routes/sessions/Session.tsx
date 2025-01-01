@@ -26,7 +26,6 @@ export const Session = () => {
   } = useSessions({ id: id ? +id : undefined });
   const { data: teammates } = useTeammates();
   const session = sessions?.[0];
-  const [showingRollForm, setShowingRollForm] = useState(false);
   const [mode, setMode] = useState<'view' | 'edit'>('view');
 
   const handleDelete = async (callback: () => void) => {
@@ -56,8 +55,14 @@ export const Session = () => {
 
   if (mode == 'edit') {
     return (
-      <div className={'p-4'}>
-        <button onClick={() => setMode('view')}>Back</button>
+      <div className={'p-4 '}>
+        <button
+          onClick={() => setMode('view')}
+          className={'underline flex gap-2 items-center'}
+        >
+          <Cross1Icon />
+          Cancel
+        </button>
         <SessionForm
           onSuccess={async () => {
             await refetch();
@@ -71,6 +76,8 @@ export const Session = () => {
             coach: session?.coach ?? undefined,
             avg_heart_rate: session?.avgHeartRate ?? undefined,
             calories: session?.calories ?? undefined,
+            rollCount: session?.rollCount,
+            type: session?.type ?? '',
           }}
           id={session?.id}
         />
@@ -142,7 +149,7 @@ export const Session = () => {
           <p>Logged Rolls: {rolls.length} </p>
           {rolls.map(({ teammate, id, nogi }) => (
             <div key={id} className={'flex items-center gap-2'}>
-              <p>{teammate?.name}</p>
+              <p>{teammate?.name ?? 'Unknown'}</p>
               <p>({nogi ? 'nogi' : 'gi'})</p>
               <button
                 className={'flex items-center ml-auto'}
@@ -158,30 +165,27 @@ export const Session = () => {
       ) : (
         <p>No rolls logged</p>
       )}
-      {showingRollForm ? (
-        <div>
-          <p>Roll details: </p>
-          <AddRollForm
-            hideDate
-            onSuccess={() => {
-              setShowingRollForm(false);
-            }}
-            initialValues={{
-              date: session?.date,
-              session: session?.id,
-            }}
-          />
-        </div>
-      ) : (
-        <button
-          className='flex gap-2 items-center'
-          onClick={() => {
-            setShowingRollForm(true);
-          }}
-        >
-          <PlusIcon /> Add roll
-        </button>
-      )}
+      <Modal
+        title={'Add Roll'}
+        trigger={
+          <button className='flex gap-2 items-center primary'>
+            <PlusIcon /> Add Roll
+          </button>
+        }
+        renderChildren={({ closeModal }) => (
+          <div>
+            <p>Roll details: </p>
+            <AddRollForm
+              hideDate
+              onSuccess={closeModal}
+              initialValues={{
+                date: session?.date,
+                session: session?.id,
+              }}
+            />
+          </div>
+        )}
+      />
     </div>
   );
 };
