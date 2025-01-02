@@ -7,9 +7,11 @@ import { DatesHeader } from '../../components/DatesHeader.tsx';
 export const Rolls = ({
   dates,
   setDates,
+  updateRange,
 }: {
-  dates: { start: Dayjs; end: Dayjs };
+  dates: { start: Dayjs; end: Dayjs; range: 'week' | 'month' | 'year' };
   setDates: (dates: { start: Dayjs; end: Dayjs }) => void;
+  updateRange: (range: 'week' | 'month' | 'year') => void;
 }) => {
   const [sortBy, setSortBy] = useState<'date' | 'belts' | 'teammate'>('date');
   const { data: rolls } = useRolls({
@@ -76,7 +78,11 @@ export const Rolls = ({
   ];
   return (
     <>
-      <DatesHeader dates={dates} setDates={setDates} />
+      <DatesHeader
+        dates={dates}
+        setDates={setDates}
+        updateRange={updateRange}
+      />
       <div className={'p-4'}>
         <p className={'text-lg font-bold'}>Rolls</p>
         <p>Sort by:</p>

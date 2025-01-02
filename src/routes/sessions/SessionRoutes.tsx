@@ -12,12 +12,15 @@ import { ImportSessions } from './ImportSessions/ImportSessions.tsx';
 export const SessionRoutes = ({
   dates,
   setDates,
+  updateRange,
 }: {
   dates: {
     start: Dayjs;
     end: Dayjs;
+    range: 'week' | 'month' | 'year';
   };
   setDates: (dates: { start: Dayjs; end: Dayjs }) => void;
+  updateRange: (range: 'week' | 'month' | 'year') => void;
 }) => {
   const { data: sessions, isLoading } = useSessions({
     dateRange: [
@@ -34,7 +37,11 @@ export const SessionRoutes = ({
         index
         element={
           <>
-            <DatesHeader dates={dates} setDates={setDates} />
+            <DatesHeader
+              dates={dates}
+              setDates={setDates}
+              updateRange={updateRange}
+            />
             <div className={'p-4'}>
               <div className={'flex items-center justify-between'}>
                 <h1 className={'text-xl font-bold'}>Sessions</h1>

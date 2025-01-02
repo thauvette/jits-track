@@ -8,12 +8,15 @@ import { DatesHeader } from '../../components/DatesHeader.tsx';
 export const Home = ({
   dates,
   setDates,
+  updateRange,
 }: {
   dates: {
     start: Dayjs;
     end: Dayjs;
+    range: 'week' | 'month' | 'year';
   };
   setDates: (dates: { start: Dayjs; end: Dayjs }) => void;
+  updateRange: (range: 'week' | 'month' | 'year') => void;
 }) => {
   const { data: sessions, isLoading } = useSessions({
     dateRange: [
@@ -28,7 +31,11 @@ export const Home = ({
 
   return (
     <div className={'max-w-2xl mx-auto'}>
-      <DatesHeader dates={dates} setDates={setDates} />
+      <DatesHeader
+        dates={dates}
+        setDates={setDates}
+        updateRange={updateRange}
+      />
       <div className={'p-4'}>
         {isLoading ? (
           <LoadingSpinner />
