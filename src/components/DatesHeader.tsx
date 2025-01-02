@@ -25,7 +25,7 @@ export const DatesHeader = ({
   };
 
   return (
-    <div className={'p-4'}>
+    <div className={'py-4 px-2 md:px-4'}>
       <div className={'mb-4'}>
         <p>This...</p>
         <div className={'flex gap-4'}>
@@ -59,7 +59,7 @@ export const DatesHeader = ({
         <p>
           {' '}
           {dates.start.format("ddd, MMM D 'YY")}
-          {' to '}
+          {' - '}
           {dates.end.format("ddd, MMM DD 'YY")}
         </p>
         <button
