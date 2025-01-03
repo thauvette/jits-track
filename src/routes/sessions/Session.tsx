@@ -37,7 +37,6 @@ export const Session = () => {
     // close modal
     await refetch();
     callback();
-    // navigate to /sessions
     navigate('/sessions');
   };
 
@@ -78,6 +77,8 @@ export const Session = () => {
             calories: session?.calories ?? undefined,
             rollCount: session?.rollCount,
             type: session?.type ?? '',
+            notes: session?.notes ?? '',
+            nogi: !!session?.nogi,
           }}
           id={session?.id}
         />
@@ -91,7 +92,10 @@ export const Session = () => {
 
   return (
     <div className={'p-4'}>
-      {session?.type && <p className={'text-sm'}>{session.type}</p>}
+      <p className={'text-sm'}>
+        {session?.nogi ? 'nogi' : 'gi'} {session?.type ?? ''}
+      </p>
+
       <h1 className={'text-xl mb-4'}>
         {dayjs(session?.date).format('dddd MMMM DD YYYY')}{' '}
       </h1>
@@ -105,7 +109,14 @@ export const Session = () => {
         {session?.durationSeconds ? (
           <p>Duration: {convertSecondsToDuration(session.durationSeconds)}</p>
         ) : null}
-
+        {session?.notes && (
+          <div>
+            <p>Notes:</p>
+            <div className={'p-2 border'}>
+              <p>{session.notes}</p>
+            </div>
+          </div>
+        )}
         <div className={'flex gap-4'}>
           <button
             className={'underline'}

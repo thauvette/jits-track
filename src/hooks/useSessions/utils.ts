@@ -11,5 +11,5 @@ export const formatSession = (session: SessionResponseItem) => ({
   date: session.date,
   rollCount: session.roll_count,
   notes: session.notes ?? '',
-  nogi: !!session.nogi,
+  nogi: session.nogi,
 });
