@@ -8,6 +8,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useSessions } from '../hooks/useSessions/useSessions.ts';
+import { LoadingSpinner } from './LoadingSpinner.tsx';
 
 const schema = yup.object({
   date: yup.string().required(),
@@ -102,7 +103,7 @@ export const SessionForm = ({
           return data;
         }}
       >
-        {({ handleSubmit, setFieldValue, values }) => {
+        {({ handleSubmit, setFieldValue, values, isSubmitting }) => {
           return (
             <form onSubmit={handleSubmit} className={'space-y-4'}>
               <div>
@@ -249,9 +250,19 @@ export const SessionForm = ({
                 </label>
               </div>
               <div className={'my-4'}>
-                <button className={'primary w-full'} type={'submit'}>
-                  Save
-                </button>
+                {isSubmitting ? (
+                  <div className={'flex justify-center'}>
+                    <LoadingSpinner />
+                  </div>
+                ) : (
+                  <button
+                    disabled={isSubmitting}
+                    className={'primary w-full disabled:opacity-50'}
+                    type={'submit'}
+                  >
+                    Save
+                  </button>
+                )}
               </div>
             </form>
           );

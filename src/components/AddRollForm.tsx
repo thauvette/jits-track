@@ -6,6 +6,7 @@ import { Roll, useRolls } from '../hooks/useRolls.ts';
 import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useState } from 'react';
+import { LoadingSpinner } from './LoadingSpinner.tsx';
 
 export const AddRollForm = ({
   initialValues,
@@ -62,7 +63,7 @@ export const AddRollForm = ({
         }
       }}
     >
-      {({ handleSubmit, values, setFieldValue }) => {
+      {({ handleSubmit, values, setFieldValue, isSubmitting }) => {
         return (
           <form onSubmit={handleSubmit} className={'space-y-4'}>
             {hideDate && initialValues?.date ? null : (
@@ -141,9 +142,17 @@ export const AddRollForm = ({
               </label>
             </div>
             <div>
-              <button type={'submit'} className={'primary'}>
-                Add Roll
-              </button>
+              {isSubmitting ? (
+                <LoadingSpinner />
+              ) : (
+                <button
+                  disabled={isSubmitting}
+                  type={'submit'}
+                  className={'primary disabled:opacity-50'}
+                >
+                  Add Roll
+                </button>
+              )}
             </div>
           </form>
         );

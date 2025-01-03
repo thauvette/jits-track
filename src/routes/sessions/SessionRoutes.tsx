@@ -49,9 +49,6 @@ export const SessionRoutes = ({
                   + Add New
                 </Link>
               </div>
-              <Link to={'import'} className={'underline text-sm'}>
-                Import from csv
-              </Link>
               {isLoading && (
                 <div className={'flex items-center justify-center p-4'}>
                   <LoadingSpinner className={'size-8'} />

@@ -9,12 +9,14 @@ export const Modal = ({
   trigger,
   children,
   onClose,
+  fullScreen = false,
 }: {
   title: string;
   trigger: ReactNode;
   renderChildren?: ({ closeModal }: { closeModal: () => void }) => ReactNode;
   children?: ReactNode;
   onClose?: () => void;
+  fullScreen?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = useCallback(() => {
@@ -33,7 +35,9 @@ export const Modal = ({
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='DialogOverlay' />
-        <Dialog.Content className='DialogContent'>
+        <Dialog.Content
+          className={`DialogContent ${fullScreen ? 'full-screen' : ''}`}
+        >
           <Dialog.Title title={title} />
           <div className='flex space-between items-center w-full mb-4 border-b pb-2'>
             <Dialog.Description className={'text-xl font-bold'}>

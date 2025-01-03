@@ -167,6 +167,7 @@ export const Session = () => {
       )}
       <Modal
         title={'Add Roll'}
+        fullScreen
         trigger={
           <button className='flex gap-2 items-center primary'>
             <PlusIcon /> Add Roll
