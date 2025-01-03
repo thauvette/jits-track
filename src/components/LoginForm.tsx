@@ -59,10 +59,10 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return view === 'login' ? (
     <>
-      <form onSubmit={handleSubmit} className={'p-4'}>
+      <form onSubmit={handleSubmit} className={'p-4 flex flex-col gap-4'}>
         <label>
           <p>Email</p>
-          <input name={'email'} type={'email'} required />
+          <input className={'w-full'} name={'email'} type={'email'} required />
         </label>
         <label className={'block '}>
           <p>Password</p>
@@ -71,6 +71,7 @@ export const LoginForm = () => {
               name={'password'}
               type={showPassword ? 'text' : 'password'}
               required
+              className={'w-full'}
             />
             <button
               type={'button'}

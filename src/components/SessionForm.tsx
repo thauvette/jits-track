@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Formik, Field } from 'formik';
+import { Formik, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
 import CreatableSelect from 'react-select/creatable';
@@ -8,11 +8,9 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useSessions } from '../hooks/useSessions/useSessions.ts';
-import { convertDurationToSeconds } from '../utilities/duration.tsx';
 
 const schema = yup.object({
   date: yup.string().required(),
-  duration: yup.string().required(),
   coach: yup.number(),
   avg_heart_rate: yup.number(),
   calories: yup.number(),
@@ -60,13 +58,18 @@ export const SessionForm = ({
         label: coach.name,
       })) ?? [];
 
+  const initialDuration = initialValues?.duration ?? '00:00:00';
+  const durationSplit = initialDuration.split(':');
+
   return (
     <div className={'max-w-4xl mx-auto py-8'}>
       <h1 className={'text-xl font-bold mb-6'}>New Session</h1>
       <Formik
         initialValues={{
           date: initialValues?.date ?? dayjs().format('YYYY-MM-DD'),
-          duration: initialValues?.duration ?? '01:00:00',
+          hours: +durationSplit[0],
+          minutes: +durationSplit[1],
+          seconds: +durationSplit[2],
           coach: initialValues?.coach ?? '',
           avg_heart_rate: initialValues?.avg_heart_rate ?? '',
           calories: initialValues?.calories ?? '',
@@ -75,13 +78,16 @@ export const SessionForm = ({
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
+          const duration =
+            values.hours * 60 * 60 + values.minutes * 60 + values.seconds;
+
           const req = {
             date: values.date,
             coach: values.coach ? +values.coach : undefined,
             avg_heart_rate: values.avg_heart_rate
               ? +values.avg_heart_rate
               : undefined,
-            duration_seconds: convertDurationToSeconds(values.duration),
+            duration_seconds: duration,
             calories: values.calories ? +values.calories : undefined,
             type: values.type ?? '',
             roll_count: values.roll_count ? +values.roll_count : 0,
@@ -104,6 +110,11 @@ export const SessionForm = ({
                   <p>Date</p>
                   <Field name={'date'} type={'date'} />
                 </label>
+                <ErrorMessage
+                  name={'date'}
+                  component={'p'}
+                  className={'text-red-600'}
+                />
               </div>
               <div>
                 <label>
@@ -112,10 +123,54 @@ export const SessionForm = ({
                 </label>
               </div>
               <div>
-                <label>
-                  <p>Duration</p>
-                  <Field type={'time'} name={'duration'} step='1' />
-                </label>
+                <p>Duration</p>
+                <div className={'flex gap-2'}>
+                  <label>
+                    <p>Hours:</p>
+                    <Field
+                      name={'hours'}
+                      type={'number'}
+                      max={12}
+                      min={0}
+                      step={1}
+                      onClick={(event: Event) => {
+                        if (event.target instanceof HTMLInputElement) {
+                          event.target.select();
+                        }
+                      }}
+                    />
+                  </label>
+                  <label>
+                    <p>Minutes:</p>
+                    <Field
+                      name={'minutes'}
+                      type={'number'}
+                      max={59}
+                      min={0}
+                      step={1}
+                      onClick={(event: Event) => {
+                        if (event.target instanceof HTMLInputElement) {
+                          event.target.select();
+                        }
+                      }}
+                    />
+                  </label>
+                  <label>
+                    <p>Seconds:</p>
+                    <Field
+                      name={'seconds'}
+                      type={'number'}
+                      max={59}
+                      min={0}
+                      step={1}
+                      onClick={(event: Event) => {
+                        if (event.target instanceof HTMLInputElement) {
+                          event.target.select();
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
               <div>
                 <label>
