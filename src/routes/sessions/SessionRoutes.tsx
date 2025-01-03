@@ -58,7 +58,9 @@ export const SessionRoutes = ({
               {sessions?.map((session) => {
                 return (
                   <div key={session.id} className='my-4 border-b'>
-                    <p className={'text-sm'}>{session.type}</p>
+                    <p className={'text-sm'}>
+                      {session.nogi ? 'nogi' : 'gi'} {session.type ?? ''}
+                    </p>
                     <Link
                       to={`${session.id}`}
                       className={'underline font-bold flex items-center gap-2'}

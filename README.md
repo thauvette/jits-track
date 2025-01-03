@@ -13,7 +13,13 @@ VITE_SUPABASE_PUB_KEY=
 
 
 #  TODOs: 
-- optimistic ui on changes and/or loading states
+- ux is still very rough
+- dark mode 
+- quick add menu or link to new session 
+- home page ux, probably stats. 
+- calendar view? 
+- PWA 
+- export sessions as csv 
 
 # React + TypeScript + Vite
 

@@ -10,4 +10,6 @@ export const formatSession = (session: SessionResponseItem) => ({
   type: session.type,
   date: session.date,
   rollCount: session.roll_count,
+  notes: session.notes ?? '',
+  nogi: !!session.nogi,
 });

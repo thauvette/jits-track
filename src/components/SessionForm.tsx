@@ -33,6 +33,8 @@ export const SessionForm = ({
     calories?: number;
     type?: string;
     rollCount?: number;
+    nogi: boolean;
+    notes: string;
   };
   id?: number;
 }) => {
@@ -76,6 +78,8 @@ export const SessionForm = ({
           calories: initialValues?.calories ?? '',
           type: initialValues?.type ?? '',
           roll_count: initialValues?.rollCount ?? '',
+          notes: initialValues?.notes ?? '',
+          nogi: !!initialValues?.nogi,
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
@@ -92,6 +96,8 @@ export const SessionForm = ({
             calories: values.calories ? +values.calories : undefined,
             type: values.type ?? '',
             roll_count: values.roll_count ? +values.roll_count : 0,
+            nogi: !!values.nogi,
+            notes: values.notes ?? null,
           };
 
           const { data } = id
@@ -121,6 +127,12 @@ export const SessionForm = ({
                 <label>
                   <p>Type (eg: Class, Open Mat)</p>
                   <Field name={'type'} />
+                </label>
+              </div>
+              <div>
+                <label className={'flex gap-2 items-center'}>
+                  <Field name={'nogi'} type={'checkbox'} />
+                  <p>Nogi</p>
                 </label>
               </div>
               <div>
@@ -247,6 +259,12 @@ export const SessionForm = ({
                 <label>
                   <p>Calories</p>
                   <Field type={'number'} name={'calories'} />
+                </label>
+              </div>
+              <div>
+                <label>
+                  <p>Notes</p>
+                  <Field name={'notes'} as={'textarea'} />
                 </label>
               </div>
               <div className={'my-4'}>

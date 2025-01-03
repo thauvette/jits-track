@@ -21,5 +21,7 @@ export interface SessionResponseItem {
   user_id: string;
   date: string;
   roll_count: number;
+  nogi: boolean;
+  notes: string | null;
   Rolls?: Roll[];
 }
