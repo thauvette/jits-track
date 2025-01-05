@@ -5,6 +5,7 @@ import { SessionRoutes } from './sessions/SessionRoutes.tsx';
 import { Home } from './home/Home.tsx';
 import { Rolls } from './rolls/Rolls.tsx';
 import { TeamRoutes } from './team/TeamRoutes.tsx';
+import { Stats } from './stats/Stats.tsx';
 
 export const Router = () => {
   const [dates, setDates] = useState<{
@@ -48,6 +49,7 @@ export const Router = () => {
             />
           }
         />
+        <Route path={'stats'} element={<Stats />} />
         <Route
           path={'sessions/*'}
           element={

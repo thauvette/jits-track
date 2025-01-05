@@ -25,3 +25,18 @@ export interface SessionResponseItem {
   notes: string | null;
   Rolls?: Roll[];
 }
+
+export interface HydratedSession {
+  id: number;
+  created: string;
+  durationSeconds: number;
+  coach: number | null;
+  avgHeartRate: number;
+  calories: number;
+  type: string;
+  date: string;
+  rollCount: number;
+  notes: string;
+  nogi: boolean;
+  rolls?: Roll[];
+}

@@ -30,6 +30,12 @@ export const Header = () => {
                   </Link>
                 </DropdownMenu.Item>
                 <hr />
+                <DropdownMenu.Item asChild>
+                  <Link className='px-1 py-2 block' to={'/stats'}>
+                    Stats
+                  </Link>
+                </DropdownMenu.Item>
+                <hr />
                 <DropdownMenu.Item asChild className='px-1 py-2'>
                   <button onClick={logout}>Logout</button>
                 </DropdownMenu.Item>

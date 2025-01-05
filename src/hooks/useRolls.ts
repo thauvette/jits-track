@@ -11,18 +11,40 @@ export interface Roll {
   id: number;
   created: string;
   date: string;
-  session: number | undefined;
+  session?: number;
   nogi: boolean;
-  teammate?:
-    | {
-        belt: number;
-        name: string;
-        id: number;
-        beltName: string;
-      }
-    | null
-    | undefined;
+  teammate?: {
+    belt: number;
+    name: string;
+    id: number;
+    beltName: string;
+  };
 }
+
+interface RollReq {
+  teammateId: number | null;
+  date: string;
+  session?: number;
+  nogi: boolean;
+}
+interface FormattedReq {
+  teammate_id: number | null;
+  date: string;
+  nogi: boolean;
+  session?: number;
+}
+
+const formatRoll = (roll: RollReq) => {
+  const result: FormattedReq = {
+    teammate_id: roll.teammateId,
+    date: roll.date,
+    nogi: roll.nogi,
+  };
+  if (roll.session) {
+    result.session = roll.session;
+  }
+  return result;
+};
 
 export const useRolls = (props?: {
   sessionId?: number;
@@ -88,35 +110,11 @@ export const useRolls = (props?: {
                 ...roll.Teammates,
                 beltName: belts[roll.Teammates.belt - 1],
               }
-            : null,
+            : undefined,
         }));
       }
     },
   });
-
-  interface RollReq {
-    teammateId: number | null;
-    date: string;
-    session?: number;
-    nogi: boolean;
-  }
-  interface FormattedReq {
-    teammate_id: number | null;
-    date: string;
-    nogi: boolean;
-    session?: number;
-  }
-  const formatRoll = (roll: RollReq) => {
-    const result: FormattedReq = {
-      teammate_id: roll.teammateId,
-      date: roll.date,
-      nogi: roll.nogi,
-    };
-    if (roll.session) {
-      result.session = roll.session;
-    }
-    return result;
-  };
 
   const addRoll = async (rolls: RollReq | RollReq[]) => {
     const req = Array.isArray(rolls)
