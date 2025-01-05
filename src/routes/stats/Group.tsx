@@ -157,7 +157,7 @@ const RollData = ({ rolls }: { rolls: Roll[] }) => {
 
       const currentTeam = obj.team?.[teamKey] ?? [];
       currentTeam.push(roll);
-      const currentBelt = obj.team?.[beltKey] ?? [];
+      const currentBelt = obj.belt?.[beltKey] ?? [];
       currentBelt.push(roll);
       return {
         ...obj,
