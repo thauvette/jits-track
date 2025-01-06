@@ -25,14 +25,18 @@ export const Header = () => {
                 sideOffset={5}
               >
                 <DropdownMenu.Item asChild>
-                  <Link className='px-1 py-2 block' to={'/team'}>
+                  <Link className='px-1 py-1 block' to={'/team'}>
                     My Team
                   </Link>
                 </DropdownMenu.Item>
-                <hr />
                 <DropdownMenu.Item asChild>
-                  <Link className='px-1 py-2 block' to={'/stats'}>
-                    Stats
+                  <Link className='px-1 py-1 block' to={'/sessions'}>
+                    Sessions
+                  </Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item asChild>
+                  <Link className='px-1 py-1 block' to={'/rolls'}>
+                    Rolls
                   </Link>
                 </DropdownMenu.Item>
                 <hr />

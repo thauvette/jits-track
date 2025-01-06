@@ -52,20 +52,23 @@ export const DatesHeader = ({
           onClick={() => {
             jumpDates(-1);
           }}
+          className={'size-8 flex items-center justify-center '}
         >
           <span className={'sr-only'}>Previous {dates.range}</span>
           <ArrowLeftIcon className={'size-4'} />
         </button>
         <p>
-          {' '}
-          {dates.start.format("ddd, MMM D 'YY")}
-          {' - '}
-          {dates.end.format("ddd, MMM DD 'YY")}
+          {dates.range === 'month'
+            ? dates.start.format('MMMM YYYY')
+            : dates.range === 'year'
+              ? dates.start.format('YYYY')
+              : `${dates.start.format("dd, MMM D 'YY")} - ${dates.end.format("dd, MMM DD 'YY")}`}
         </p>
         <button
           onClick={() => {
             jumpDates(1);
           }}
+          className={'size-8 flex items-center justify-center '}
         >
           <span className={'sr-only'}>Next {dates.range}</span>
           <ArrowRightIcon className={'size-4'} />

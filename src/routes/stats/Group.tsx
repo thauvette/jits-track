@@ -9,8 +9,10 @@ import 'swiper/css/pagination';
 
 import { getAverage } from './utils.ts';
 import { Roll } from '../../hooks/useRolls.ts';
+import { Link } from 'react-router';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
 
-const slideClassNames = 'pt-4 pb-8 !h-auto';
+const slideClassNames = 'pt-4 pb-8 px-2 !h-auto';
 const slideInnerClassNames = 'bg-blue-100 h-full p-4';
 
 export const Group = ({
@@ -86,16 +88,24 @@ export const Group = ({
       <div className={'pb-4 border-b'}>
         <Swiper modules={[Pagination]} pagination={{ clickable: true }}>
           <SwiperSlide className={slideClassNames}>
-            <div className={slideInnerClassNames}>
+            <div className={slideInnerClassNames + ' flex flex-col'}>
               <p>
                 Sessions: {sessions.length} in {totalDays} days.{' '}
                 {trainedPercentage}%
               </p>
               <p>Total time: {convertSecondsToDuration(data.totalDuration)}</p>
+              <div className={'flex justify-end mt-auto'}>
+                <Link
+                  to={'/sessions'}
+                  className={'underline flex gap-1 items-center'}
+                >
+                  Sessions <ArrowRightIcon />
+                </Link>
+              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide className={slideClassNames}>
-            <div className={slideInnerClassNames}>
+            <div className={slideInnerClassNames + ' flex flex-col'}>
               <p>Roll count: {data.rollTotal}</p>
               <p>Logged Rolls: {data.loggedRollTotal}</p>
               <p>
@@ -119,12 +129,14 @@ export const Group = ({
                   : 0}
                 %
               </p>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide className={slideClassNames}>
-            <div className={slideInnerClassNames}>
-              <p>Total calories: {data.totalCalories}</p>
-              <p>Average Cals per Session: {getAverage(data.calories)}</p>
+              <div className={'flex justify-end mt-auto'}>
+                <Link
+                  to={'/rolls'}
+                  className={'underline flex gap-1 items-center'}
+                >
+                  Rolls <ArrowRightIcon />
+                </Link>
+              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide className={slideClassNames}>
@@ -134,6 +146,12 @@ export const Group = ({
               ) : (
                 <p className={'text-center'}>No Logged roll data</p>
               )}
+            </div>
+          </SwiperSlide>
+          <SwiperSlide className={slideClassNames}>
+            <div className={slideInnerClassNames}>
+              <p>Total calories: {data.totalCalories}</p>
+              <p>Average Cals per Session: {getAverage(data.calories)}</p>
             </div>
           </SwiperSlide>
         </Swiper>
@@ -183,7 +201,7 @@ const RollData = ({ rolls }: { rolls: Roll[] }) => {
       <p className={'capitalize'}>
         {Object.entries(data.belt)
           .map(([belt, items]) => `${belt}: ${items.length}`)
-          .join(' , ')}
+          .join(', ')}
       </p>
     </div>
   );

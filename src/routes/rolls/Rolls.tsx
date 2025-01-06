@@ -4,6 +4,12 @@ import { useMemo, useState } from 'react';
 import { Roll, useRolls } from '../../hooks/useRolls.ts';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
 
+const sortOptions: ('week' | 'belts' | 'teammate')[] = [
+  'week',
+  'belts',
+  'teammate',
+];
+
 export const Rolls = ({
   dates,
   setDates,
@@ -13,7 +19,7 @@ export const Rolls = ({
   setDates: (dates: { start: Dayjs; end: Dayjs }) => void;
   updateRange: (range: 'week' | 'month' | 'year') => void;
 }) => {
-  const [sortBy, setSortBy] = useState<'date' | 'belts' | 'teammate'>('date');
+  const [sortBy, setSortBy] = useState<'week' | 'belts' | 'teammate'>('week');
   const { data: rolls } = useRolls({
     dateRange: [
       dates.start.format('YYYY-MM-DD'),
@@ -26,7 +32,7 @@ export const Rolls = ({
       teammate: {
         [key: string]: Roll[];
       };
-      date: {
+      week: {
         [key: string]: Roll[];
       };
       belts: {
@@ -38,8 +44,8 @@ export const Rolls = ({
         const teamKey = teammate?.name ?? 'notListed';
         const currentTeam = obj.teammate[teamKey] || [];
         currentTeam.push(roll);
-        const dateKey = dayjs(date).format('ddd MMM DD YYYY');
-        const currentDate = obj.date[dateKey] ?? [];
+        const dateKey = dayjs(date).startOf('week').format('ddd MMM DD YYYY');
+        const currentDate = obj.week[dateKey] ?? [];
         currentDate.push(roll);
         const beltKey = teammate?.beltName ?? 'notListed';
         const currentBelt = obj.belts[beltKey] || [];
@@ -51,8 +57,8 @@ export const Rolls = ({
             ...obj.teammate,
             [teamKey]: currentTeam,
           },
-          date: {
-            ...obj.date,
+          week: {
+            ...obj.week,
             [dateKey]: currentDate,
           },
           belts: {
@@ -63,7 +69,7 @@ export const Rolls = ({
       },
       {
         teammate: {},
-        date: {},
+        week: {},
         belts: {},
       },
     );
@@ -71,11 +77,17 @@ export const Rolls = ({
 
   const data = grouped?.[sortBy];
 
-  const sortOptions: ('date' | 'belts' | 'teammate')[] = [
-    'date',
-    'belts',
-    'teammate',
-  ];
+  const sortedKey =
+    sortBy === 'week'
+      ? Object.keys(data || {}).sort((a, b) =>
+          dayjs(b).isBefore(dayjs(a)) ? -1 : 1,
+        )
+      : Object.entries(data || {})
+          .sort(([, aRolls], [, bRolls]) =>
+            aRolls.length < bRolls.length ? 1 : -1,
+          )
+          .map((entry) => entry[0]);
+
   return (
     <>
       <DatesHeader
@@ -97,14 +109,17 @@ export const Rolls = ({
             </button>
           ))}
         </div>
-        {data && Object.keys(data)?.length
-          ? Object.entries(data).map(([key, items]) => (
-              <div key={key}>
-                <p className='capitalize'>
-                  {key}: {items.length}
-                </p>
-              </div>
-            ))
+        {sortedKey?.length
+          ? sortedKey.map((key) => {
+              const item = data?.[key];
+              return item ? (
+                <div key={key}>
+                  <p className='capitalize'>
+                    {key}: {item.length}
+                  </p>
+                </div>
+              ) : null;
+            })
           : null}
       </div>
     </>
