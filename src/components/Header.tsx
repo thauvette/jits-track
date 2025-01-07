@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <header
       className={
-        'bg-purple-950 text-orange-200 py-3 fixed top-0 left-0 right-0'
+        'bg-purple-950 text-orange-200 py-3 fixed top-0 left-0 right-0 z-10'
       }
     >
       <div className={'max-content flex items-center px-2'}>
