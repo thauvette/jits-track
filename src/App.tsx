@@ -6,10 +6,11 @@ import { useSupabase } from './hooks/useSupabase.ts';
 import { Header } from './components/Header.tsx';
 import { LoadingSpinner } from './components/LoadingSpinner.tsx';
 import { ResetPasswordForm } from './components/ResetPasswordForm.tsx';
+import { useScrollTop } from './hooks/useScrollTop.ts';
 
 function App() {
   const { isAuthenticated, isLoading } = useSupabase();
-
+  useScrollTop();
   if (isLoading) {
     return (
       <div className={'flex items-center justify-center py-8'}>
