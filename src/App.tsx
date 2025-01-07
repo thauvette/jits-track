@@ -34,7 +34,7 @@ function App() {
         element={
           <>
             <Header />
-            <div className={'max-content'}>
+            <div className={'max-content pt-12 pb-4'}>
               <Router />
             </div>
           </>
