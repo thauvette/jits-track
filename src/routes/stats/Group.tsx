@@ -140,18 +140,27 @@ export const Group = ({
             </div>
           </SwiperSlide>
           <SwiperSlide className={slideClassNames}>
-            <div className={slideInnerClassNames}>
+            <div className={slideInnerClassNames + ' flex flex-col'}>
               {data.loggedRolls?.length ? (
                 <RollData rolls={data.loggedRolls} />
               ) : (
-                <p className={'text-center'}>No Logged roll data</p>
+                <p className={''}>No Logged roll data</p>
               )}
+              <div className={'flex justify-end mt-auto'}>
+                <Link
+                  to={'/rolls'}
+                  className={'underline flex gap-1 items-center'}
+                >
+                  Rolls <ArrowRightIcon />
+                </Link>
+              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide className={slideClassNames}>
             <div className={slideInnerClassNames}>
               <p>Total calories: {data.totalCalories}</p>
               <p>Average Cals per Session: {getAverage(data.calories)}</p>
+              <p>Average Heart Rate: {getAverage(data.heartRates)}</p>
             </div>
           </SwiperSlide>
         </Swiper>
