@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 
 const quickDates: ('week' | 'month' | 'year')[] = ['week', 'month', 'year'];
@@ -62,13 +62,16 @@ export const DatesHeader = ({
             ? dates.start.format('MMMM YYYY')
             : dates.range === 'year'
               ? dates.start.format('YYYY')
-              : `${dates.start.format("dd, MMM D 'YY")} - ${dates.end.format("dd, MMM DD 'YY")}`}
+              : `${dates.start.format("dd, MMM D 'YY")} - ${dates.end.isSame(dayjs(), 'day') ? 'Today' : dates.end.format("dd, MMM DD 'YY")}`}
         </p>
         <button
           onClick={() => {
             jumpDates(1);
           }}
-          className={'size-8 flex items-center justify-center '}
+          disabled={dates.end.isSame(dayjs(), dates.range)}
+          className={
+            'size-8 flex items-center justify-center disabled:opacity-50'
+          }
         >
           <span className={'sr-only'}>Next {dates.range}</span>
           <ArrowRightIcon className={'size-4'} />

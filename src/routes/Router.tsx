@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Routes, Route } from 'react-router';
 import { SessionRoutes } from './sessions/SessionRoutes.tsx';
@@ -35,6 +35,14 @@ export const Router = () => {
     }));
   };
 
+  const formattedDates = useMemo(
+    () => ({
+      ...dates,
+      end: dates.end.isBefore(dayjs()) ? dates.end : dayjs(),
+    }),
+    [dates],
+  );
+
   return (
     <>
       <Routes>
@@ -42,7 +50,7 @@ export const Router = () => {
           index
           element={
             <Stats
-              dates={dates}
+              dates={formattedDates}
               updateRange={updateRange}
               setDates={updateDates}
             />
@@ -52,7 +60,7 @@ export const Router = () => {
           path={'sessions/*'}
           element={
             <SessionRoutes
-              dates={dates}
+              dates={formattedDates}
               updateRange={updateRange}
               setDates={updateDates}
             />
@@ -62,7 +70,7 @@ export const Router = () => {
           path={'rolls/*'}
           element={
             <Rolls
-              dates={dates}
+              dates={formattedDates}
               updateRange={updateRange}
               setDates={updateDates}
             />
