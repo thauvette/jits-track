@@ -193,6 +193,7 @@ export const Session = () => {
               initialValues={{
                 date: session?.date,
                 session: session?.id,
+                nogi: !!session?.nogi,
               }}
             />
           </div>
