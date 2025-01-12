@@ -4,12 +4,24 @@
 
 @layer base {
   body {
-    @apply text-purple-950 bg-grey-50 bg-opacity-50;
+    @apply bg-white text-primary-900 dark:bg-black dark:text-white;
+  }
+  .bg-1 {
+    @apply bg-white text-primary-900 dark:bg-black dark:text-white;
+  }
+  .bg-2 {
+    @apply bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-100;
+  }
+  .bg-gray-1 {
+    @apply bg-gray-300 dark:bg-gray-900 text-gray-900 dark:text-gray-200;
+  }
+  .bg-gray-2 {
+    @apply bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100;
   }
   input,
   select,
   textarea {
-    @apply border border-[#cccccc] px-4 py-1 rounded-md;
+    @apply bg-transparent border border-primary-700 dark:border-primary-200 px-4 py-1 rounded-md;
     &:not([type='checkbox']) {
       @apply w-full;
     }
@@ -17,18 +29,57 @@
       @apply size-5;
     }
   }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .custom-select {
+    .custom-select__single-value {
+      @apply text-primary-900 dark:text-white;
+    }
+    .custom-select__control {
+      @apply bg-transparent border border-primary-700 dark:border-primary-200 px-4 py-1 rounded-md;
+      .custom-select__value-container {
+        @apply p-0;
+      }
+    }
+    .custom-select__menu {
+      @apply bg-gray-1;
+      .custom-select__option {
+        @apply bg-gray-2 hover:bg-gray-1;
+      }
+    }
+  }
   button,
   a {
+    @apply py-1 px-2 text-lg;
     &.primary {
-      @apply bg-indigo-400 text-white hover:bg-indigo-500 px-4 py-2;
+      @apply bg-highlight-600 text-white font-bold;
     }
-    &.warn {
-      @apply bg-orange-400 text-black hover:bg-orange-500 px-4 py-2;
+    &.secondary {
+      @apply bg-gray-600 text-white;
+    }
+    &.hollow {
+      @apply bg-transparent border-primary-700 text-primary-700 dark:border-primary-200 dark:text-primary-200;
+    }
+    &.link {
+      @apply bg-transparent border-none text-primary-700  dark:text-primary-200 underline;
+    }
+    &.warning {
+      @apply bg-red-900 text-white;
+    }
+    &.blue {
+      @apply bg-blue-400 text-primary-700 dark:bg-blue-900 dark:text-primary-100;
     }
     &.danger {
       @apply bg-red-500 text-white hover:bg-red-600 px-4 py-2;
     }
   }
+  .card {
+    @apply bg-gray-100 text-primary-800 dark:bg-primary-900 dark:text-primary-100 rounded-md border border-gray-400 dark:border-gray-700;
+  }
+
   .max-content {
     @apply max-w-7xl mx-auto;
   }
@@ -37,7 +88,7 @@
     animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .DialogContent {
-    @apply p-4 bg-white fixed z-20;
+    @apply p-4 bg-1 fixed z-20;
 
     animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
     &.full-screen {
@@ -48,6 +99,18 @@
       max-height: 85vh;
       max-width: 450px;
       width: 90vw;
+    }
+  }
+  .swiper {
+    .swiper-wrapper {
+    }
+    .swiper-pagination {
+      .swiper-pagination-bullet {
+        @apply bg-gray-400 dark:bg-white opacity-50;
+        &.swiper-pagination-bullet-active {
+          @apply bg-purple-600 dark:bg-orange-100 opacity-100;
+        }
+      }
     }
   }
 }

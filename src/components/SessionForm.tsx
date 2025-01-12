@@ -189,6 +189,8 @@ export const SessionForm = ({
                 <label>
                   <p>Coach</p>
                   <CreatableSelect
+                    className={'custom-select'}
+                    classNamePrefix={'custom-select'}
                     options={coaches}
                     name={'coach'}
                     isSearchable

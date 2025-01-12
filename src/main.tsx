@@ -11,10 +11,12 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 import App from './App.tsx';
-import './index.css';
 
 // @ts-expect-error swiper issue
 import 'swiper/css';
+import './index.css';
+
+import { ColorThemeProvider } from './context/colorTheme/ColorThemeProvider.tsx';
 
 const queryClient = new QueryClient();
 
@@ -22,7 +24,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <ColorThemeProvider>
+          <App />
+        </ColorThemeProvider>
         <Toaster />
       </BrowserRouter>
     </QueryClientProvider>

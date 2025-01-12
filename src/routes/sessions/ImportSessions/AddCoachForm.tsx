@@ -47,9 +47,10 @@ export const AddCoachForm = ({
           <div key={index} className={'mb-4'}>
             <p>{coach.name}</p>
             <CreatableSelect
+              className={`custom-select ${showCreateAtIndex === index ? 'hidden' : ''}`}
+              classNamePrefix={'custom-select'}
               options={options}
               value={options?.find((option) => option.value === coach.coachId)}
-              className={`${showCreateAtIndex === index ? 'hidden' : ''}`}
               isOptionSelected={(option) => coach.coachId === option.value}
               onChange={(option) => {
                 const current = structuredClone(results);

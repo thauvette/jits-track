@@ -13,7 +13,7 @@ import { Link } from 'react-router';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 
 const slideClassNames = 'pt-4 pb-8 px-2 !h-auto';
-const slideInnerClassNames = 'bg-blue-100 h-full p-4';
+const slideInnerClassNames = 'card h-full p-4';
 
 export const Group = ({
   sessions,

@@ -79,6 +79,8 @@ export const AddRollForm = ({
               <label>
                 <p>Teammate</p>
                 <CreatableSelect
+                  className={'custom-select'}
+                  classNamePrefix={'custom-select'}
                   options={teamOptions}
                   name={'teammate'}
                   isSearchable

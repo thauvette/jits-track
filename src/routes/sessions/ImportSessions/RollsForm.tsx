@@ -76,7 +76,8 @@ export const RollsForm = ({
         <div key={index} className={'mb-2  py-2'}>
           <p>{roll.name}</p>
           <CreatableSelect
-            className={`${showCreateAtIndex === index ? 'hidden' : ''}`}
+            className={`custom-select ${showCreateAtIndex === index ? 'hidden' : ''}`}
+            classNamePrefix={'custom-select'}
             options={teamOptions}
             value={teamOptions?.find(
               ({ value }) => roll.id && value === +roll?.id,
