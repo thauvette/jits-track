@@ -42,7 +42,7 @@
     "@types/big.js": "^6.2.2",
     "@types/lodash": "^4.17.13",
     "@types/react": "^19.0.5",
-    "@types/react-dom": "^18.3.5",
+    "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.17.0",
