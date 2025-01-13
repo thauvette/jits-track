@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
+import { SelectableButtonList } from './ButtonList.tsx';
 
 const quickDates: ('week' | 'month' | 'year')[] = ['week', 'month', 'year'];
 
@@ -28,22 +29,15 @@ export const DatesHeader = ({
     <div className={'py-4 px-2 md:px-4'}>
       <div className={'mb-4'}>
         <p>This...</p>
-        <div className={'flex'}>
-          {quickDates.map((quickDate) => {
-            const isSelected = dates.range === quickDate;
-            return (
-              <button
-                key={quickDate}
-                onClick={() => {
-                  updateRange(quickDate);
-                }}
-                className={`px-4 py-1 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100 no-underline border-b-4 border-highlight-900 dark:border-highlight-200 ${isSelected ? '' : 'border-opacity-0 dark:border-opacity-0'}`}
-              >
-                {quickDate}
-              </button>
-            );
-          })}
-        </div>
+
+        <SelectableButtonList
+          buttons={quickDates.map((quickDate) => ({
+            value: quickDate,
+            label: quickDate,
+            isSelected: dates.range === quickDate,
+            onClick: () => updateRange(quickDate),
+          }))}
+        />
       </div>
 
       <div className='flex items-center gap-4 justify-center md:text-lg font-bold'>

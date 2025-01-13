@@ -57,13 +57,15 @@ export const SessionRoutes = ({
 
               {sessions?.map((session) => {
                 return (
-                  <div key={session.id} className='my-4 border-b'>
+                  <div key={session.id} className='my-4 card p-4'>
                     <p className={'text-sm'}>
                       {session.nogi ? 'nogi' : 'gi'} {session.type ?? ''}
                     </p>
                     <Link
                       to={`${session.id}`}
-                      className={'underline font-bold flex items-center gap-2'}
+                      className={
+                        'underline pl-0 font-bold flex items-center gap-2'
+                      }
                     >
                       {dayjs(session.date).format('dddd, MMMM DD YYYY')}
                       <ArrowRightIcon className={'size-5'} />

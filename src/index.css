@@ -55,7 +55,7 @@
   a {
     @apply py-1 px-2 text-lg;
     &.primary {
-      @apply bg-highlight-600 text-white font-bold;
+      @apply bg-highlight-500 text-white font-bold hover:bg-highlight-700;
     }
     &.secondary {
       @apply bg-gray-600 text-white;

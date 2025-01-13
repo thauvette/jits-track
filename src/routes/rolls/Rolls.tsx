@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 
 import { Roll, useRolls } from '../../hooks/useRolls.ts';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
+import { SelectableButtonList } from '../../components/ButtonList.tsx';
 
 const sortOptions: ('week' | 'belts' | 'teammate')[] = [
   'week',
@@ -97,18 +98,19 @@ export const Rolls = ({
       />
       <div className={'p-4'}>
         <p className={'text-lg font-bold'}>Rolls</p>
-        <p>Sort by:</p>
-        <div className='flex gap-4 mb-4'>
-          {sortOptions.map((type) => (
-            <button
-              key={type}
-              className={`capitalize border-b-2 px-2 ${type === sortBy ? 'border-black' : ''}`}
-              onClick={() => setSortBy(type)}
-            >
-              {type}
-            </button>
-          ))}
+        <p className={'mb-2'}>Sort by:</p>
+
+        <div className='mb-4'>
+          <SelectableButtonList
+            buttons={sortOptions.map((type) => ({
+              label: type,
+              value: type,
+              onClick: () => setSortBy(type),
+              isSelected: type === sortBy,
+            }))}
+          />
         </div>
+
         {sortedKey?.length
           ? sortedKey.map((key) => {
               const item = data?.[key];
