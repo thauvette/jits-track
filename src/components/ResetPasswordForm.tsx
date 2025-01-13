@@ -26,8 +26,7 @@ export const ResetPasswordForm = () => {
   };
 
   return (
-    <div className={'p-4'}>
-      <h1 className={'text-lg font-bold mb-4'}>Reset Password</h1>
+    <div>
       <form onSubmit={submit}>
         <label>
           <p>New Password</p>

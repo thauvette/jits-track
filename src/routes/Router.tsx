@@ -5,6 +5,10 @@ import { SessionRoutes } from './sessions/SessionRoutes.tsx';
 import { Rolls } from './rolls/Rolls.tsx';
 import { TeamRoutes } from './team/TeamRoutes.tsx';
 import { Stats } from './stats/Stats.tsx';
+import { useProfile } from '../hooks/useProfile.ts';
+import { useSupabase } from '../hooks/useSupabase.ts';
+import { ProfileForm } from '../components/ProfileForm.tsx';
+import { Profile } from './profile/Profile.tsx';
 
 export const Router = () => {
   const [dates, setDates] = useState<{
@@ -16,6 +20,10 @@ export const Router = () => {
     end: dayjs().endOf('month'),
     range: 'month',
   });
+  const { user } = useSupabase();
+  const { data: profile, isLoading } = useProfile();
+
+  const showMissingProfileWarning = !!user?.id && !isLoading && !profile;
 
   const updateRange = (range: 'week' | 'month' | 'year') => {
     const start = dayjs().startOf(range);
@@ -43,7 +51,12 @@ export const Router = () => {
     [dates],
   );
 
-  return (
+  return showMissingProfileWarning ? (
+    <div className={'pt-8 max-w-2xl'}>
+      <h1 className={'text-lg '}>We need to quickly set up your profile.</h1>
+      <ProfileForm />
+    </div>
+  ) : (
     <>
       <Routes>
         <Route
@@ -77,6 +90,7 @@ export const Router = () => {
           }
         />
         <Route path={'team/*'} element={<TeamRoutes />} />
+        <Route path={'profile'} element={<Profile />} />
         <Route path={'*'} element={<h1>404</h1>} />
       </Routes>
     </>

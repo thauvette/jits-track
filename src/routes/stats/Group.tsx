@@ -86,7 +86,18 @@ export const Group = ({
       </p>
 
       <div className={'pb-4 border-b'}>
-        <Swiper modules={[Pagination]} pagination={{ clickable: true }}>
+        <Swiper
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
+          breakpoints={{
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }}
+        >
           <SwiperSlide className={slideClassNames}>
             <div className={slideInnerClassNames + ' flex flex-col'}>
               <p>
