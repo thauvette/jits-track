@@ -28,7 +28,17 @@ function App() {
 
   return (
     <Routes>
-      <Route path={'reset-password'} element={<ResetPasswordForm />} />
+      <Route
+        path={'reset-password'}
+        element={
+          <div className={'p-8 max-w-2xl'}>
+            <h1 className={'text-lg font-bold uppercase mb-4'}>
+              Set your password
+            </h1>
+            <ResetPasswordForm />
+          </div>
+        }
+      />
       <Route
         path={'*'}
         element={
