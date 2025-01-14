@@ -56,7 +56,7 @@ export const useProfile = () => {
       toast.error(message);
     }
   };
-  console.log(query.data);
+
   return {
     ...query,
     updateProfile,

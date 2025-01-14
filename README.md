@@ -6,6 +6,9 @@ requires a `.env` or `.env.local` with
 VITE_SUPABASE_URL=
 VITE_SUPABASE_PUB_KEY=
 ```
+as well as docker. 
+
+then run `npx supabase start` and `npm run dev`
 
 ## Supabase migrations 
 - When making changes to local DB run `npx supabase db diff -f descriptive_name`

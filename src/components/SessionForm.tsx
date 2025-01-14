@@ -66,7 +66,6 @@ export const SessionForm = ({
 
   return (
     <div className={'max-w-4xl mx-auto py-8'}>
-      <h1 className={'text-xl font-bold mb-6'}>New Session</h1>
       <Formik
         initialValues={{
           date: initialValues?.date ?? dayjs().format('YYYY-MM-DD'),

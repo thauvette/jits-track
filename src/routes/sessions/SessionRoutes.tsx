@@ -87,13 +87,8 @@ export const SessionRoutes = ({
       <Route
         path={'/:id'}
         element={
-          <div className={'p-4'}>
-            <Link to={'/sessions'} className={'flex gap-2 items-center'}>
-              <ArrowLeftIcon /> Sessions
-            </Link>
-            <div className={'max-w-2xl  py-4'}>
-              <Session />
-            </div>
+          <div className={'max-w-2xl mx-auto py-4'}>
+            <Session />
           </div>
         }
       />

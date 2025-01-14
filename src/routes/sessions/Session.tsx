@@ -1,7 +1,15 @@
 import { useNavigate, useParams } from 'react-router';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import { PlusIcon, Cross1Icon } from '@radix-ui/react-icons';
+import {
+  PlusIcon,
+  Cross1Icon,
+  ClockIcon,
+  BarChartIcon,
+} from '@radix-ui/react-icons';
+
+import HeartRateIcon from '../../assets/icons/heart-rate-outline.svg?react';
+import ChartIcon from '../../assets/icons/pulse-outline.svg?react';
 
 import { useRolls } from '../../hooks/useRolls.ts';
 import { useSessions } from '../../hooks/useSessions/useSessions.ts';
@@ -11,6 +19,8 @@ import { SessionForm } from '../../components/SessionForm.tsx';
 import { useTeammates } from '../../hooks/useTeammates.ts';
 import { Modal } from '../../components/Modal.tsx';
 import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
+import { StatLine } from './components/StatLine.tsx';
+import { SessionHeader } from './components/SessionHeader.tsx';
 
 export const Session = () => {
   const { id } = useParams();
@@ -91,114 +101,112 @@ export const Session = () => {
       : null;
 
   return (
-    <div className={'p-4'}>
-      <p className={'text-sm'}>
-        {session?.nogi ? 'nogi' : 'gi'} {session?.type ?? ''}
-      </p>
-
-      <h1 className={'text-xl mb-4'}>
-        {dayjs(session?.date).format('dddd MMMM DD YYYY')}{' '}
-      </h1>
-      <div className={'space-y-4 border-b pb-4 mb-4'}>
-        {coach?.name ? <p>Coach: {coach.name}</p> : null}
-        <p>Roll Count: {session?.rollCount ?? 0}</p>
-        {session?.avgHeartRate ? (
-          <p>Avg Heart Rate: {session.avgHeartRate}</p>
-        ) : null}
-        {session?.calories ? <p>Calories Burned: {session.calories}</p> : null}
-        {session?.durationSeconds ? (
-          <p>Duration: {convertSecondsToDuration(session.durationSeconds)}</p>
-        ) : null}
-        {session?.notes && (
-          <div>
-            <p>Notes:</p>
-            <div className={'p-2 border'}>
-              <p>{session.notes}</p>
-            </div>
-          </div>
-        )}
-        <div className={'flex gap-4'}>
-          <button
-            className={'underline'}
-            onClick={() => {
-              setMode('edit');
-            }}
-          >
-            Edit details
-          </button>
-          <Modal
-            title={'Delete Session'}
-            trigger={<button className={'danger'}>Delete Session</button>}
-            renderChildren={({ closeModal }) => {
-              return (
-                <div>
-                  <p className={'text-lg mb-4'}>
-                    Are you sure you want to delete this session?
-                  </p>
-                  <div className={'flex gap-4 items-center'}>
-                    <button className={'primary'} onClick={closeModal}>
-                      No, keep it
-                    </button>
-                    <button
-                      className={'danger'}
-                      onClick={() => {
-                        void handleDelete(closeModal);
-                      }}
-                    >
-                      Yes, ditch it.
-                    </button>
-                  </div>
-                </div>
-              );
-            }}
-          />
+    <>
+      <SessionHeader
+        handleDelete={handleDelete}
+        handleEdit={() => setMode('edit')}
+      />
+      <div className={'p-4 bg-2'}>
+        <div className={'pb-4 mb-2'}>
+          <p className={'text-sm'}>
+            {session?.nogi ? 'nogi' : 'gi'} {session?.type ?? ''}
+          </p>
+          <h1 className={'text-xl'}>
+            {dayjs(session?.date).format('dddd MMMM DD YYYY')}{' '}
+          </h1>
+          {coach?.name ? (
+            <p className={'text-sm'}>Coach: {coach.name}</p>
+          ) : null}
         </div>
-      </div>
-
-      {rolls?.length ? (
-        <div className={'space-y-2 border-b pb-2 mb-2'}>
-          <p>Logged Rolls: {rolls.length} </p>
-          {rolls.map(({ teammate, id, nogi }) => (
-            <div key={id} className={'flex items-center gap-2'}>
-              <p>{teammate?.name ?? 'Unknown'}</p>
-              <p>({nogi ? 'nogi' : 'gi'})</p>
-              <button
-                className={'flex items-center ml-auto'}
-                onClick={() => {
-                  void removeRoll(id);
-                }}
-              >
-                <Cross1Icon />
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>No rolls logged</p>
-      )}
-      <Modal
-        title={'Add Roll'}
-        fullScreen
-        trigger={
-          <button className='flex gap-2 items-center primary'>
-            <PlusIcon /> Add Roll
-          </button>
-        }
-        renderChildren={({ closeModal }) => (
-          <div>
-            <p>Roll details: </p>
-            <AddRollForm
-              hideDate
-              onSuccess={closeModal}
-              initialValues={{
-                date: session?.date,
-                session: session?.id,
-                nogi: !!session?.nogi,
-              }}
+        <div>
+          <div className={'mb-4'}>
+            <StatLine
+              text={convertSecondsToDuration(session?.durationSeconds ?? 0)}
+              subText={'Duration'}
+              icon={<ClockIcon className={'size-4'} />}
             />
           </div>
+          <div className={'grid grid-cols-2 gap-4'}>
+            <StatLine
+              text={session?.rollCount ?? 0}
+              icon={<BarChartIcon className={'size-4'} />}
+              subText={'Rolls'}
+            />
+
+            {session?.avgHeartRate ? (
+              <StatLine
+                text={session.avgHeartRate ?? 0}
+                icon={<HeartRateIcon className={'size-4'} />}
+                subText={'Avg. Heart Rate'}
+              />
+            ) : null}
+            {session?.calories ? (
+              <StatLine
+                text={session.calories}
+                subText={'Calories'}
+                icon={<ChartIcon className={'size-4'} />}
+              />
+            ) : null}
+          </div>
+
+          {session?.notes && (
+            <div>
+              <p>Notes:</p>
+              <div className={'p-2 border'}>
+                <p>{session.notes}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className={'pl-2 mt-4 flex items-center justify-between'}>
+        <p>Logged rolls: {rolls?.length ?? 0}</p>
+        <Modal
+          title={'Add Roll'}
+          fullScreen
+          trigger={
+            <button className='flex gap-2 items-center text-base'>
+              <PlusIcon /> Add Roll
+            </button>
+          }
+          renderChildren={({ closeModal }) => (
+            <div>
+              <p>Roll details: </p>
+              <AddRollForm
+                hideDate
+                onSuccess={closeModal}
+                initialValues={{
+                  date: session?.date,
+                  session: session?.id,
+                  nogi: !!session?.nogi,
+                }}
+              />
+            </div>
+          )}
+        />
+      </div>
+      <div className={'bg-2 p-4'}>
+        {rolls?.length ? (
+          <div className={'space-y-2 mb-2'}>
+            {rolls.map(({ teammate, id, nogi }) => (
+              <div key={id} className={'flex items-center gap-2'}>
+                <p className={'text-lg'}>{teammate?.name ?? 'Unknown'}</p>
+                <p>({nogi ? 'nogi' : 'gi'})</p>
+                <button
+                  className={'flex items-center ml-auto'}
+                  onClick={() => {
+                    void removeRoll(id);
+                  }}
+                >
+                  <Cross1Icon />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No rolls logged</p>
         )}
-      />
-    </div>
+      </div>
+    </>
   );
 };
