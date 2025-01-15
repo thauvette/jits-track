@@ -35,6 +35,9 @@
     margin: 0;
   }
   .custom-select {
+    .custom-select__input {
+      @apply text-primary-900 dark:text-white;
+    }
     .custom-select__single-value {
       @apply text-primary-900 dark:text-white;
     }

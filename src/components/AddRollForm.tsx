@@ -1,12 +1,12 @@
 import { Field, Formik } from 'formik';
 import CreatableSelect from 'react-select/creatable';
-import * as Dialog from '@radix-ui/react-dialog';
 
 import { Roll, useRolls } from '../hooks/useRolls.ts';
 import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { LoadingSpinner } from './LoadingSpinner.tsx';
+import { Cross1Icon } from '@radix-ui/react-icons';
 
 export const AddRollForm = ({
   initialValues,
@@ -43,6 +43,15 @@ export const AddRollForm = ({
       value: id,
     })) || [];
 
+  const dismissNewTeamMemberDialog = useCallback(() => {
+    setNewTeamMemberDialog({
+      isOpen: false,
+      name: '',
+      belt: null,
+      isCoach: false,
+    });
+  }, []);
+
   return (
     <Formik
       initialValues={{
@@ -64,98 +73,89 @@ export const AddRollForm = ({
       }}
     >
       {({ handleSubmit, values, setFieldValue, isSubmitting }) => {
-        return (
+        return newTeamMemberDialog.isOpen ? (
+          <>
+            <div className={'flex gap-2 items-center'}>
+              <p className={'text-xl font-bold'}>Add team member</p>
+              <button
+                onClick={dismissNewTeamMemberDialog}
+                aria-label={'Cancel add team member'}
+                className={'ml-auto'}
+              >
+                <Cross1Icon />
+              </button>
+            </div>
+            <AddTeammateForm
+              initialValues={{
+                name: newTeamMemberDialog.name,
+                belt: newTeamMemberDialog.belt ?? 1,
+                isCoach: newTeamMemberDialog.isCoach,
+              }}
+              onSuccess={async (result) => {
+                await setFieldValue('teammate', result.id);
+                dismissNewTeamMemberDialog();
+              }}
+            />
+          </>
+        ) : (
           <form onSubmit={handleSubmit} className={'space-y-4'}>
-            {hideDate && initialValues?.date ? null : (
+            <>
+              {hideDate && initialValues?.date ? null : (
+                <div>
+                  <label>
+                    <p>Date</p>
+                    <Field type={'date'} name={'date'} />
+                  </label>
+                </div>
+              )}
               <div>
                 <label>
-                  <p>Date</p>
-                  <Field type={'date'} name={'date'} />
+                  <p>Teammate</p>
+
+                  <CreatableSelect
+                    className={'custom-select'}
+                    classNamePrefix={'custom-select'}
+                    options={teamOptions}
+                    name={'teammate'}
+                    isSearchable
+                    isClearable
+                    value={teamOptions?.find(
+                      ({ value }) => value === +values.teammate,
+                    )}
+                    onChange={async (option) => {
+                      await setFieldValue('teammate', option?.value ?? '');
+                    }}
+                    onCreateOption={(option) => {
+                      setNewTeamMemberDialog({
+                        isOpen: true,
+                        name: option,
+                        belt: 1,
+                        isCoach: false,
+                      });
+                    }}
+                  />
                 </label>
               </div>
-            )}
-
-            <div>
-              <label>
-                <p>Teammate</p>
-                <CreatableSelect
-                  className={'custom-select'}
-                  classNamePrefix={'custom-select'}
-                  options={teamOptions}
-                  name={'teammate'}
-                  isSearchable
-                  isClearable
-                  value={teamOptions?.find(
-                    ({ value }) => value === +values.teammate,
-                  )}
-                  onChange={async (option) => {
-                    await setFieldValue('teammate', option?.value ?? '');
-                  }}
-                  onCreateOption={(option) => {
-                    setNewTeamMemberDialog({
-                      isOpen: true,
-                      name: option,
-                      belt: 5,
-                      isCoach: true,
-                    });
-                  }}
-                />
-              </label>
-              <Dialog.Root
-                open={newTeamMemberDialog.isOpen}
-                onOpenChange={(isOpen) => {
-                  setNewTeamMemberDialog({
-                    isOpen,
-                    name: '',
-                    isCoach: false,
-                    belt: null,
-                  });
-                }}
-              >
-                <Dialog.Portal>
-                  <Dialog.Overlay className='DialogOverlay' />
-                  <Dialog.Content className='DialogContent'>
-                    <Dialog.Title title={'Add Coach'} />
-                    <Dialog.Description>Add Coach</Dialog.Description>
-                    <AddTeammateForm
-                      initialValues={{
-                        name: newTeamMemberDialog.name,
-                        belt: newTeamMemberDialog.belt ?? 1,
-                        isCoach: newTeamMemberDialog.isCoach,
-                      }}
-                      onSuccess={async (result) => {
-                        await setFieldValue('teammate', result.id);
-                        setNewTeamMemberDialog({
-                          isOpen: false,
-                          name: '',
-                          belt: null,
-                          isCoach: false,
-                        });
-                      }}
-                    />
-                  </Dialog.Content>
-                </Dialog.Portal>
-              </Dialog.Root>
-            </div>
-            <div>
-              <label className={'flex gap-2 items-center'}>
-                <Field name={'nogi'} type={'checkbox'} />
-                <p>Nogi</p>
-              </label>
-            </div>
-            <div>
-              {isSubmitting ? (
-                <LoadingSpinner />
-              ) : (
-                <button
-                  disabled={isSubmitting}
-                  type={'submit'}
-                  className={'primary disabled:opacity-50'}
-                >
-                  Add Roll
-                </button>
-              )}
-            </div>
+              <div>
+                <label className={'flex gap-2 items-center'}>
+                  <Field name={'nogi'} type={'checkbox'} />
+                  <p>Nogi</p>
+                </label>
+              </div>
+              <div>
+                {isSubmitting ? (
+                  <LoadingSpinner />
+                ) : (
+                  <button
+                    disabled={isSubmitting}
+                    type={'submit'}
+                    className={'primary disabled:opacity-50'}
+                  >
+                    Add Roll
+                  </button>
+                )}
+              </div>
+            </>
           </form>
         );
       }}

@@ -170,18 +170,15 @@ export const Session = () => {
             </button>
           }
           renderChildren={({ closeModal }) => (
-            <div>
-              <p>Roll details: </p>
-              <AddRollForm
-                hideDate
-                onSuccess={closeModal}
-                initialValues={{
-                  date: session?.date,
-                  session: session?.id,
-                  nogi: !!session?.nogi,
-                }}
-              />
-            </div>
+            <AddRollForm
+              hideDate
+              onSuccess={closeModal}
+              initialValues={{
+                date: session?.date,
+                session: session?.id,
+                nogi: !!session?.nogi,
+              }}
+            />
           )}
         />
       </div>

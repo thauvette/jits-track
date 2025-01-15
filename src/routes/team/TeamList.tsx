@@ -67,7 +67,7 @@ export const TeamList = () => {
               {mate.name}: {mate.beltName} belt
             </Link>
             <Modal
-              title={`Edit teammate}`}
+              title={`Edit teammate`}
               trigger={
                 <button
                   className={'ml-auto'}

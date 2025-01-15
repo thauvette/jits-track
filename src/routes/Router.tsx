@@ -52,7 +52,7 @@ export const Router = () => {
   );
 
   return showMissingProfileWarning ? (
-    <div className={'pt-8 max-w-2xl'}>
+    <div className={'pt-8 max-w-2xl px-4'}>
       <h1 className={'text-lg '}>We need to quickly set up your profile.</h1>
       <ProfileForm />
     </div>
