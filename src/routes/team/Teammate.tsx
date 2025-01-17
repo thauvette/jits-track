@@ -1,7 +1,7 @@
 import { useParams } from 'react-router';
 import { useTeammates } from '../../hooks/useTeammates.ts';
 import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
-import { useRolls } from '../../hooks/useRolls.ts';
+import { useRolls } from '../../hooks/useRolls/useRolls.ts';
 
 export const Teammate = () => {
   const { id } = useParams();

@@ -1,7 +1,8 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useMemo, useState } from 'react';
 
-import { Roll, useRolls } from '../../hooks/useRolls.ts';
+import { useRolls } from '../../hooks/useRolls/useRolls.ts';
+import { Roll } from '../../hooks/useRolls/types.ts';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
 import { SelectableButtonList } from '../../components/ButtonList.tsx';
 

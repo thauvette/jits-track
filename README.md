@@ -17,10 +17,8 @@ then run `npx supabase start` and `npm run dev`
 
 #  TODOs: 
 - ux is still very rough
-- dark mode 
-- quick add menu or link to new session 
-- home page ux, probably stats. 
 - calendar view? 
+- rolls: add length (based on profile default), subs, subbed 
 - PWA 
 - export sessions as csv 
 

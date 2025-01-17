@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSupabase } from '../useSupabase.ts';
-import { useRolls } from '../useRolls.ts';
+import { useRolls } from '../useRolls/useRolls.ts';
 import { SessionRequestBody, SessionResponseItem } from './types.ts';
 import { formatSession } from './utils.ts';
 import dayjs from 'dayjs';

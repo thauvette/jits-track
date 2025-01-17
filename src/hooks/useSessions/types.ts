@@ -1,4 +1,4 @@
-import { Roll } from '../useRolls.ts';
+import { Roll } from '../useRolls/types.ts';
 
 export interface SessionRequestBody {
   date: string; // YYYY-MM-DD

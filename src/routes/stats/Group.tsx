@@ -8,7 +8,7 @@ import { convertSecondsToDuration } from '../../utilities/duration.tsx';
 import 'swiper/css/pagination';
 
 import { getAverage } from './utils.ts';
-import { Roll } from '../../hooks/useRolls.ts';
+import { Roll } from '../../hooks/useRolls/types.ts';
 import { Link } from 'react-router';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 

@@ -1,38 +1,13 @@
 import toast from 'react-hot-toast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSupabase } from './useSupabase.ts';
-import { belts } from '../config/betls.ts';
+import { useSupabase } from '../useSupabase.ts';
+import { belts } from '../../config/betls.ts';
+import { FormattedReq, RollReq, RollRes, Roll } from './types.ts';
+import { formatSubsRequest } from './utilities.ts';
 
 const rollSelect = `*, Teammates(
             id, name, belt
-        )`;
-
-export interface Roll {
-  id: number;
-  created: string;
-  date: string;
-  session?: number;
-  nogi: boolean;
-  teammate?: {
-    belt: number;
-    name: string;
-    id: number;
-    beltName: string;
-  };
-}
-
-interface RollReq {
-  teammateId: number | null;
-  date: string;
-  session?: number;
-  nogi: boolean;
-}
-interface FormattedReq {
-  teammate_id: number | null;
-  date: string;
-  nogi: boolean;
-  session?: number;
-}
+        ), Subs_for(sub,roll,id, Subs(name)), Subs_against(sub,roll,id, Subs(name))`;
 
 const formatRoll = (roll: RollReq) => {
   const result: FormattedReq = {
@@ -71,7 +46,7 @@ export const useRolls = (props?: {
   const queryData = useQuery({
     staleTime: 1000 * 60 * 10,
     queryKey,
-    queryFn: async () => {
+    queryFn: async (): Promise<Roll[] | undefined> => {
       const query = supabase.from('Rolls').select(rollSelect);
       if (sessionId) {
         query.eq('session', sessionId);
@@ -84,20 +59,7 @@ export const useRolls = (props?: {
       if (teamId) {
         query.eq('teammate_id', teamId);
       }
-      const { data } = await query.returns<
-        {
-          id: number;
-          created_at: string;
-          date: string;
-          session?: number;
-          nogi: boolean;
-          Teammates?: {
-            id: number;
-            name: string;
-            belt: number;
-          };
-        }[]
-      >();
+      const { data } = await query.returns<RollRes[]>();
       if (data) {
         return data.map((roll) => ({
           id: roll.id,
@@ -111,11 +73,24 @@ export const useRolls = (props?: {
                 beltName: belts[roll.Teammates.belt - 1],
               }
             : undefined,
+          subsFor: roll.Subs_for.map((sub) => ({
+            id: sub.id,
+            roll: sub.roll,
+            sub: sub.sub,
+            name: sub.Subs.name,
+          })),
+          subsAgainst: roll.Subs_against.map((sub) => ({
+            id: sub.id,
+            roll: sub.roll,
+            sub: sub.sub,
+            name: sub.Subs.name,
+          })),
         }));
       }
     },
   });
 
+  // TODO: update roll
   const addRoll = async (rolls: RollReq | RollReq[]) => {
     const req = Array.isArray(rolls)
       ? rolls.map(formatRoll)
@@ -125,6 +100,23 @@ export const useRolls = (props?: {
       .insert(req)
       .select(rollSelect);
     if (data) {
+      // array of sub and roll id's
+      const subsFor = formatSubsRequest(rolls, 'subsFor', data);
+      const subsAgainst = formatSubsRequest(rolls, 'subAgainst', data);
+      const subPromises = [];
+      if (subsFor?.length) {
+        subPromises.push(supabase.from('Subs_for').insert(subsFor).select());
+      }
+      if (subsAgainst?.length) {
+        subPromises.push(
+          supabase.from('Subs_against').insert(subsAgainst).select(),
+        );
+      }
+
+      if (subPromises?.length) {
+        await Promise.allSettled(subPromises);
+      }
+
       await queryClient.invalidateQueries({
         queryKey: ['rolls'],
       });

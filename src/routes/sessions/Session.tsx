@@ -11,7 +11,7 @@ import {
 import HeartRateIcon from '../../assets/icons/heart-rate-outline.svg?react';
 import ChartIcon from '../../assets/icons/pulse-outline.svg?react';
 
-import { useRolls } from '../../hooks/useRolls.ts';
+import { useRolls } from '../../hooks/useRolls/useRolls.ts';
 import { useSessions } from '../../hooks/useSessions/useSessions.ts';
 import { AddRollForm } from '../../components/AddRollForm.tsx';
 import { convertSecondsToDuration } from '../../utilities/duration.tsx';
@@ -150,9 +150,9 @@ export const Session = () => {
           </div>
 
           {session?.notes && (
-            <div>
-              <p>Notes:</p>
-              <div className={'p-2 border'}>
+            <div className={'mt-4'}>
+              <p className={'mb-1'}>Notes:</p>
+              <div className={'p-2 border-4 border-gray-500 border-opacity-25'}>
                 <p>{session.notes}</p>
               </div>
             </div>
@@ -185,10 +185,15 @@ export const Session = () => {
       <div className={'bg-2 p-4'}>
         {rolls?.length ? (
           <div className={'space-y-2 mb-2'}>
-            {rolls.map(({ teammate, id, nogi }) => (
+            {rolls.map(({ teammate, id, nogi, subsFor, subsAgainst }) => (
               <div key={id} className={'flex items-center gap-2'}>
                 <p className={'text-lg'}>{teammate?.name ?? 'Unknown'}</p>
                 <p>({nogi ? 'nogi' : 'gi'})</p>
+                <p>
+                  {/*  TODO: new ui for this list. Accordion maybe */}
+                  {subsFor?.length} & {subsAgainst?.length}
+                </p>
+
                 <button
                   className={'flex items-center ml-auto'}
                   onClick={() => {
