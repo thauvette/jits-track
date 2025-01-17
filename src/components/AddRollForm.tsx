@@ -14,6 +14,7 @@ export const AddRollForm = ({
   initialValues,
   onSuccess,
   hideDate = false,
+  roll = null,
 }: {
   initialValues?: {
     session?: number;
@@ -25,9 +26,10 @@ export const AddRollForm = ({
   };
   onSuccess: (roll: Roll) => void;
   hideDate?: boolean;
+  roll?: Roll | null;
 }) => {
   const { data: teammates } = useTeammates();
-  const { addRoll } = useRolls({
+  const { addRoll, updateRoll } = useRolls({
     sessionId: initialValues?.session,
   });
   const [newTeamMemberDialog, setNewTeamMemberDialog] = useState<{
@@ -55,7 +57,7 @@ export const AddRollForm = ({
       isCoach: false,
     });
   }, []);
-
+  // TODO: the select styles need fixin'
   return (
     <Formik
       initialValues={{
@@ -67,14 +69,18 @@ export const AddRollForm = ({
         subsAgainst: initialValues?.subsAgainst || [],
       }}
       onSubmit={async (values) => {
-        const { data } = await addRoll({
+        const req = {
           teammateId: values.teammate ? +values.teammate : null,
           date: values.date,
           session: values.session ? +values.session : undefined,
           nogi: !!values.nogi,
           subsFor: values.subsFor,
-          subAgainst: values.subsAgainst,
-        });
+          subsAgainst: values.subsAgainst,
+        };
+
+        const { data } = roll?.id
+          ? await updateRoll(roll, req)
+          : await addRoll(req);
         if (data && onSuccess) {
           onSuccess(data[0]);
         }

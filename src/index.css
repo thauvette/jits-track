@@ -45,6 +45,12 @@
       @apply bg-transparent border border-primary-700 dark:border-primary-200 px-4 py-1 rounded-md;
       .custom-select__value-container {
         @apply p-0;
+        .custom-select__input-container {
+          @apply text-primary-900 dark:text-white;
+        }
+        .custom-select__multi-value {
+          @apply bg-gray-200 text-primary-800;
+        }
       }
     }
     .custom-select__menu {

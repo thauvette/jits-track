@@ -90,7 +90,66 @@ export const useRolls = (props?: {
     },
   });
 
-  // TODO: update roll
+  const updateRoll = async (initialRoll: Roll, rollRequest: RollReq) => {
+    // seems like we need a middleware. 😬
+    const req = formatRoll(rollRequest);
+    const subsFor = formatSubsRequest(rollRequest, 'subsFor', [
+      { id: initialRoll.id },
+    ]);
+    const subsAgainst = formatSubsRequest(rollRequest, 'subsAgainst', [
+      { id: initialRoll.id },
+    ]);
+    const newSubsFor = subsFor?.filter(
+      ({ sub }) =>
+        !initialRoll.subsFor?.some(({ sub: current }) => current === sub),
+    );
+    const newSubsAgainst = subsAgainst?.filter(
+      ({ sub }) =>
+        !initialRoll.subsAgainst?.some(({ sub: current }) => current === sub),
+    );
+
+    const removeSubsFor = initialRoll.subsFor?.filter(
+      ({ sub }) => !subsFor?.some((current) => current.sub === sub),
+    );
+    const removeSubsAgainst = initialRoll.subsAgainst?.filter(
+      ({ sub }) => !subsAgainst?.some((current) => current.sub === sub),
+    );
+
+    const promises = [];
+    if (newSubsFor?.length) {
+      promises.push(supabase.from('Subs_for').insert(newSubsFor).select());
+    }
+    if (newSubsAgainst?.length) {
+      promises.push(supabase.from('Subs_against').insert(newSubsFor).select());
+    }
+    if (removeSubsFor?.length) {
+      removeSubsFor.forEach(({ id }) => {
+        promises.push(supabase.from('Subs_for').delete().eq('id', id).select());
+      });
+    }
+
+    if (removeSubsAgainst?.length) {
+      removeSubsAgainst.forEach(({ id }) => {
+        promises.push(
+          supabase.from('Subs_against').delete().eq('id', id).select(),
+        );
+      });
+    }
+
+    const rollResponse = await supabase
+      .from('Rolls')
+      .update(req)
+      .eq('id', initialRoll.id)
+      .select(rollSelect);
+
+    if (promises?.length) {
+      await Promise.allSettled(promises);
+    }
+    await queryClient.invalidateQueries({
+      queryKey: ['rolls'],
+    });
+    return rollResponse;
+  };
   const addRoll = async (rolls: RollReq | RollReq[]) => {
     const req = Array.isArray(rolls)
       ? rolls.map(formatRoll)
@@ -102,7 +161,7 @@ export const useRolls = (props?: {
     if (data) {
       // array of sub and roll id's
       const subsFor = formatSubsRequest(rolls, 'subsFor', data);
-      const subsAgainst = formatSubsRequest(rolls, 'subAgainst', data);
+      const subsAgainst = formatSubsRequest(rolls, 'subsAgainst', data);
       const subPromises = [];
       if (subsFor?.length) {
         subPromises.push(supabase.from('Subs_for').insert(subsFor).select());
@@ -150,5 +209,6 @@ export const useRolls = (props?: {
     ...queryData,
     addRoll,
     removeRoll,
+    updateRoll,
   };
 };

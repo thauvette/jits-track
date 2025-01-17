@@ -2,7 +2,7 @@ import { RollReq } from './types.ts';
 
 export const formatSubsRequest = (
   rolls: RollReq | RollReq[],
-  key: 'subsFor' | 'subAgainst',
+  key: 'subsFor' | 'subsAgainst',
   data?: { id: number }[],
 ) => {
   return Array.isArray(rolls)

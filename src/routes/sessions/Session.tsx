@@ -1,33 +1,24 @@
 import { useNavigate, useParams } from 'react-router';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import {
-  PlusIcon,
-  Cross1Icon,
-  ClockIcon,
-  BarChartIcon,
-} from '@radix-ui/react-icons';
+import { Cross1Icon, ClockIcon, BarChartIcon } from '@radix-ui/react-icons';
 
 import HeartRateIcon from '../../assets/icons/heart-rate-outline.svg?react';
 import ChartIcon from '../../assets/icons/pulse-outline.svg?react';
 
-import { useRolls } from '../../hooks/useRolls/useRolls.ts';
 import { useSessions } from '../../hooks/useSessions/useSessions.ts';
-import { AddRollForm } from '../../components/AddRollForm.tsx';
 import { convertSecondsToDuration } from '../../utilities/duration.tsx';
 import { SessionForm } from '../../components/SessionForm.tsx';
 import { useTeammates } from '../../hooks/useTeammates.ts';
-import { Modal } from '../../components/Modal.tsx';
 import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
 import { StatLine } from './components/StatLine.tsx';
 import { SessionHeader } from './components/SessionHeader.tsx';
+import { SessionRolls } from './components/Roll.tsx';
 
 export const Session = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: rolls, removeRoll } = useRolls({
-    sessionId: id ? +id : undefined,
-  });
+
   const {
     data: sessions,
     isLoading,
@@ -159,56 +150,7 @@ export const Session = () => {
           )}
         </div>
       </div>
-      <div className={'pl-2 mt-4 flex items-center justify-between'}>
-        <p>Logged rolls: {rolls?.length ?? 0}</p>
-        <Modal
-          title={'Add Roll'}
-          fullScreen
-          trigger={
-            <button className='flex gap-2 items-center text-base'>
-              <PlusIcon /> Add Roll
-            </button>
-          }
-          renderChildren={({ closeModal }) => (
-            <AddRollForm
-              hideDate
-              onSuccess={closeModal}
-              initialValues={{
-                date: session?.date,
-                session: session?.id,
-                nogi: !!session?.nogi,
-              }}
-            />
-          )}
-        />
-      </div>
-      <div className={'bg-2 p-4'}>
-        {rolls?.length ? (
-          <div className={'space-y-2 mb-2'}>
-            {rolls.map(({ teammate, id, nogi, subsFor, subsAgainst }) => (
-              <div key={id} className={'flex items-center gap-2'}>
-                <p className={'text-lg'}>{teammate?.name ?? 'Unknown'}</p>
-                <p>({nogi ? 'nogi' : 'gi'})</p>
-                <p>
-                  {/*  TODO: new ui for this list. Accordion maybe */}
-                  {subsFor?.length} & {subsAgainst?.length}
-                </p>
-
-                <button
-                  className={'flex items-center ml-auto'}
-                  onClick={() => {
-                    void removeRoll(id);
-                  }}
-                >
-                  <Cross1Icon />
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No rolls logged</p>
-        )}
-      </div>
+      {session && <SessionRolls session={session} />}
     </>
   );
 };

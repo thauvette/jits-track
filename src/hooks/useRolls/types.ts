@@ -3,7 +3,7 @@ export interface RollReq {
   date: string;
   session?: number;
   nogi: boolean;
-  subAgainst?: number[];
+  subsAgainst?: number[];
   subsFor?: number[];
 }
 export interface FormattedReq {

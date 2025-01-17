@@ -32,7 +32,6 @@ export const AddCoachForm = ({
       };
     }),
   );
-  console.log(results);
 
   const options =
     teammates?.map((teammate) => ({
