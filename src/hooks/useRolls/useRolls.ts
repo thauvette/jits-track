@@ -4,6 +4,7 @@ import { useSupabase } from '../useSupabase.ts';
 import { belts } from '../../config/betls.ts';
 import { FormattedReq, RollReq, RollRes, Roll } from './types.ts';
 import { formatSubsRequest } from './utilities.ts';
+import { useProfile } from '../useProfile.ts';
 
 const rollSelect = `*, Teammates(
             id, name, belt
@@ -14,6 +15,7 @@ const formatRoll = (roll: RollReq) => {
     teammate_id: roll.teammateId,
     date: roll.date,
     nogi: roll.nogi,
+    duration_seconds: roll.duration,
   };
   if (roll.session) {
     result.session = roll.session;
@@ -27,7 +29,7 @@ export const useRolls = (props?: {
   teamId?: number;
 }) => {
   const { sessionId, dateRange, teamId } = props ?? {};
-
+  const { data: profile } = useProfile();
   const { supabase } = useSupabase();
   const queryKey: (string | number | { [key: string]: string | number })[] = [
     'rolls',
@@ -85,6 +87,11 @@ export const useRolls = (props?: {
             sub: sub.sub,
             name: sub.Subs.name,
           })),
+          durationInSeconds: roll.duration_seconds
+            ? roll.duration_seconds
+            : profile?.default_round_length
+              ? profile?.default_round_length
+              : 360,
         }));
       }
     },

@@ -70,9 +70,7 @@ export const Session = () => {
           }}
           initialValues={{
             date: session?.date,
-            duration: session?.durationSeconds
-              ? convertSecondsToDuration(session.durationSeconds)
-              : undefined,
+            duration: session?.durationSeconds,
             coach: session?.coach ?? undefined,
             avg_heart_rate: session?.avgHeartRate ?? undefined,
             calories: session?.calories ?? undefined,

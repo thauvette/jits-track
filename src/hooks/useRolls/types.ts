@@ -5,12 +5,14 @@ export interface RollReq {
   nogi: boolean;
   subsAgainst?: number[];
   subsFor?: number[];
+  duration: number;
 }
 export interface FormattedReq {
   teammate_id: number | null;
   date: string;
   nogi: boolean;
   session?: number;
+  duration_seconds: number;
 }
 
 export interface SubRes {
@@ -34,6 +36,7 @@ export interface RollRes {
   };
   Subs_against: SubRes[];
   Subs_for: SubRes[];
+  duration_seconds: number | null;
 }
 
 interface Sub {
@@ -59,4 +62,5 @@ export interface Roll {
     | undefined;
   subsAgainst: Sub[];
   subsFor: Sub[];
+  durationInSeconds: number;
 }

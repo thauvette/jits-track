@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react';
 import { LoadingSpinner } from './LoadingSpinner.tsx';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { SubSelect } from './SubSelect.tsx';
+import { DurationFields } from './DurationFields.tsx';
 
 export const AddRollForm = ({
   initialValues,
@@ -23,6 +24,7 @@ export const AddRollForm = ({
     nogi?: boolean;
     subsFor?: number[];
     subsAgainst?: number[];
+    duration?: number | null;
   };
   onSuccess: (roll: Roll) => void;
   hideDate?: boolean;
@@ -57,7 +59,7 @@ export const AddRollForm = ({
       isCoach: false,
     });
   }, []);
-  // TODO: the select styles need fixin'
+
   return (
     <Formik
       initialValues={{
@@ -67,6 +69,7 @@ export const AddRollForm = ({
         nogi: initialValues?.nogi ?? false,
         subsFor: initialValues?.subsFor || [],
         subsAgainst: initialValues?.subsAgainst || [],
+        duration: initialValues?.duration ? initialValues.duration : 360,
       }}
       onSubmit={async (values) => {
         const req = {
@@ -76,6 +79,7 @@ export const AddRollForm = ({
           nogi: !!values.nogi,
           subsFor: values.subsFor,
           subsAgainst: values.subsAgainst,
+          duration: values.duration,
         };
 
         const { data } = roll?.id
@@ -176,6 +180,13 @@ export const AddRollForm = ({
                 />
               </label>
             </div>
+            <DurationFields
+              hiddenFields={['hours']}
+              onChange={(value) => {
+                void setFieldValue('duration', value);
+              }}
+              valueInSeconds={values.duration}
+            />
 
             <div>
               {isSubmitting ? (

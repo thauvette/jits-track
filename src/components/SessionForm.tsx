@@ -9,6 +9,7 @@ import { useTeammates } from '../hooks/useTeammates.ts';
 import { AddTeammateForm } from './AddTeammateForm.tsx';
 import { useSessions } from '../hooks/useSessions/useSessions.ts';
 import { LoadingSpinner } from './LoadingSpinner.tsx';
+import { DurationFields } from './DurationFields.tsx';
 
 const schema = yup.object({
   date: yup.string().required(),
@@ -27,7 +28,7 @@ export const SessionForm = ({
   onSuccess: ({ id }: { id: number }) => void;
   initialValues?: {
     date?: string;
-    duration?: string;
+    duration?: number;
     coach?: number;
     avg_heart_rate?: number;
     calories?: number;
@@ -61,17 +62,12 @@ export const SessionForm = ({
         label: coach.name,
       })) ?? [];
 
-  const initialDuration = initialValues?.duration ?? '00:00:00';
-  const durationSplit = initialDuration.split(':');
-
   return (
     <div className={'max-w-4xl mx-auto py-8'}>
       <Formik
         initialValues={{
           date: initialValues?.date ?? dayjs().format('YYYY-MM-DD'),
-          hours: +durationSplit[0],
-          minutes: +durationSplit[1],
-          seconds: +durationSplit[2],
+          duration: initialValues?.duration ?? 0,
           coach: initialValues?.coach ?? '',
           avg_heart_rate: initialValues?.avg_heart_rate ?? '',
           calories: initialValues?.calories ?? '',
@@ -82,16 +78,13 @@ export const SessionForm = ({
         }}
         validationSchema={schema}
         onSubmit={async (values) => {
-          const duration =
-            values.hours * 60 * 60 + values.minutes * 60 + values.seconds;
-
           const req = {
             date: values.date,
             coach: values.coach ? +values.coach : undefined,
             avg_heart_rate: values.avg_heart_rate
               ? +values.avg_heart_rate
               : undefined,
-            duration_seconds: duration,
+            duration_seconds: values.duration,
             calories: values.calories ? +values.calories : undefined,
             type: values.type ?? '',
             roll_count: values.roll_count ? +values.roll_count : 0,
@@ -136,53 +129,10 @@ export const SessionForm = ({
               </div>
               <div>
                 <p>Duration</p>
-                <div className={'flex gap-2'}>
-                  <label>
-                    <p>Hours:</p>
-                    <Field
-                      name={'hours'}
-                      type={'number'}
-                      max={12}
-                      min={0}
-                      step={1}
-                      onClick={(event: Event) => {
-                        if (event.target instanceof HTMLInputElement) {
-                          event.target.select();
-                        }
-                      }}
-                    />
-                  </label>
-                  <label>
-                    <p>Minutes:</p>
-                    <Field
-                      name={'minutes'}
-                      type={'number'}
-                      max={59}
-                      min={0}
-                      step={1}
-                      onClick={(event: Event) => {
-                        if (event.target instanceof HTMLInputElement) {
-                          event.target.select();
-                        }
-                      }}
-                    />
-                  </label>
-                  <label>
-                    <p>Seconds:</p>
-                    <Field
-                      name={'seconds'}
-                      type={'number'}
-                      max={59}
-                      min={0}
-                      step={1}
-                      onClick={(event: Event) => {
-                        if (event.target instanceof HTMLInputElement) {
-                          event.target.select();
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
+                <DurationFields
+                  onChange={(val) => setFieldValue('duration', val)}
+                  valueInSeconds={+values.duration}
+                />
               </div>
               <div>
                 <label>

@@ -4,9 +4,11 @@ import { HydratedSession } from '../../../hooks/useSessions/types.ts';
 import { useRolls } from '../../../hooks/useRolls/useRolls.ts';
 import { Modal } from '../../../components/Modal.tsx';
 import { AddRollForm } from '../../../components/AddRollForm.tsx';
+import { useProfile } from '../../../hooks/useProfile.ts';
 
 export const SessionRolls = ({ session }: { session: HydratedSession }) => {
   const { data: rolls, removeRoll } = useRolls({ sessionId: session.id });
+  const { data: profile } = useProfile();
   return (
     <>
       <div className={'pl-2 mt-4 flex items-center justify-between'}>
@@ -27,6 +29,7 @@ export const SessionRolls = ({ session }: { session: HydratedSession }) => {
                 date: session?.date,
                 session: session?.id,
                 nogi: !!session?.nogi,
+                duration: profile?.default_round_length,
               }}
             />
           )}
@@ -83,6 +86,7 @@ export const Roll = ({
                 teammate: roll.teammate?.id,
                 subsFor: roll.subsFor?.map(({ sub }) => sub) ?? [],
                 subsAgainst: roll.subsAgainst?.map(({ sub }) => sub) ?? [],
+                duration: roll.durationInSeconds,
               }}
               roll={roll}
             />

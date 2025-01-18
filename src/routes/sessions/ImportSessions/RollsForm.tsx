@@ -4,6 +4,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import CreatableSelect from 'react-select/creatable';
 import { AddTeammateForm } from '../../../components/AddTeammateForm.tsx';
+import { useProfile } from '../../../hooks/useProfile.ts';
 
 export const RollsForm = ({
   names,
@@ -21,6 +22,7 @@ export const RollsForm = ({
   onError: () => void;
 }) => {
   const { data: teammates } = useTeammates();
+  const { data: profile } = useProfile();
   const { addRoll } = useRolls();
 
   const [showCreateAtIndex, setShowCreateAtIndex] = useState<number | null>(
@@ -44,6 +46,7 @@ export const RollsForm = ({
           date: string;
           session: number;
           nogi: boolean;
+          duration: number;
         }[]
       >((arr, roll) => {
         if (roll.id) {
@@ -52,6 +55,7 @@ export const RollsForm = ({
             date,
             session,
             nogi: roll.nogi,
+            duration: profile?.default_round_length ?? 360,
           });
         }
         return arr;
