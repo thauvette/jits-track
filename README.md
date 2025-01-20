@@ -1,73 +1,33 @@
-## Running 
+# Running
+## Supabase setup 
 
-requires a `.env` or `.env.local` with 
+- Login to supabase. `npx supabase login` will open a browser to login.
+- Run `npx supabase link --project-ref <project-id>` [this](https://supabase.com/docs/guides/local-development/overview#link-your-project)
+  - enter your db password. 
+- Run `npx supabase db pull` - unless you're going to attach this to a new supabase project
+- Run `npx supabase start` - this can take a while the first time and needs docker running. 
+- use the output to fill out your .env.local file
+    ```
+    VITE_SUPABASE_URL= API URL
+    VITE_SUPABASE_PUB_KEY= anon key
+    ```
 
-```
-VITE_SUPABASE_URL=
-VITE_SUPABASE_PUB_KEY=
-```
-as well as docker. 
-
-then run `npx supabase start` and `npm run dev`
+## Running the app
+- After completing the above setup
+  - `npm install`
+  - `npm run dev`
 
 ## Supabase migrations 
 - When making changes to local DB run `npx supabase db diff -f descriptive_name`
 - Then `npx supabase db push`
 
 
+There is currently no seed file and the app is invite only. 
+You'll need "invite" a user in the Studio URL, probably http://127.0.0.1:54323, see output of `npx supabase start`
+The "email" will go to Inbucket URL from the `npx supabase start` output
+
 #  TODOs: 
 - ux is still very rough
 - calendar view? 
-- rolls: add length (based on profile default), subs, subbed 
 - PWA 
 - export sessions as csv 
-
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
