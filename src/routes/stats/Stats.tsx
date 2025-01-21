@@ -24,36 +24,37 @@ export const Stats = ({
     ],
   });
 
-  const weeks = isLoading
-    ? null
-    : Array.from({
-        length: dates.end.diff(dates.start, 'weeks') + 1,
-      })
-        .map((_, index) => {
-          const nextStart = dates.start.add(index, 'weeks').startOf('week');
-          const nextEnd = nextStart.endOf('week');
-          const start = nextStart.isAfter(dates.start)
-            ? nextStart
-            : dates.start;
-          const end = nextEnd.isBefore(dates.end) ? nextEnd : dates.end;
-          return {
-            start,
-            end,
-            totalDays: end.diff(start, 'days') + 1,
-          };
+  const weeks =
+    isLoading || dates.range === 'week'
+      ? null
+      : Array.from({
+          length: dates.end.diff(dates.start.startOf('week'), 'weeks') + 1,
         })
-        .map((week) => {
-          return {
-            ...week,
-            sessions:
-              data?.filter(({ date }) => {
-                return (
-                  dayjs(date).isSameOrAfter(week.start) &&
-                  dayjs(date).isSameOrBefore(week.end)
-                );
-              }) ?? [],
-          };
-        });
+          .map((_, index) => {
+            const nextStart = dates.start.add(index, 'weeks').startOf('week');
+            const nextEnd = nextStart.endOf('week');
+            const start = nextStart.isAfter(dates.start)
+              ? nextStart
+              : dates.start;
+            const end = nextEnd.isBefore(dates.end) ? nextEnd : dates.end;
+            return {
+              start,
+              end,
+              totalDays: end.diff(start, 'days') + 1,
+            };
+          })
+          .map((week) => {
+            return {
+              ...week,
+              sessions:
+                data?.filter(({ date }) => {
+                  return (
+                    dayjs(date).isSameOrAfter(week.start) &&
+                    dayjs(date).isSameOrBefore(week.end)
+                  );
+                }) ?? [],
+            };
+          });
 
   return (
     <div className={''}>
@@ -64,18 +65,22 @@ export const Stats = ({
       />
 
       {isLoading ? (
-        <div>
+        <div className={'flex items-center justify-center'}>
           <LoadingSpinner />
         </div>
       ) : (
         <div className={'p-4'}>
           <Group start={dates.start} end={dates.end} sessions={data ?? []} />
-          <h2 className={'my-4 font-bold'}>Numbers by week.</h2>
-          {weeks?.map((week) => (
-            <div className={'mb-4 '} key={week.start.format()}>
-              <Group {...week} />
-            </div>
-          ))}
+          {dates.range === 'week' ? null : (
+            <>
+              <h2 className={'my-4 font-bold'}>Numbers by week.</h2>
+              {weeks?.map((week) => (
+                <div className={'mb-4 '} key={week.start.format()}>
+                  <Group {...week} />
+                </div>
+              ))}
+            </>
+          )}
         </div>
       )}
     </div>
