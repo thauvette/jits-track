@@ -3,6 +3,7 @@ import { useSessions } from '../../hooks/useSessions/useSessions.ts';
 import { LoadingSpinner } from '../../components/LoadingSpinner.tsx';
 import { Group } from './Group.tsx';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
+import { HydratedSession } from '../../hooks/useSessions/types.ts';
 
 export const Stats = ({
   dates,
@@ -24,37 +25,51 @@ export const Stats = ({
     ],
   });
 
-  const weeks =
+  const weekDates =
     isLoading || dates.range === 'week'
       ? null
       : Array.from({
           length: dates.end.diff(dates.start.startOf('week'), 'weeks') + 1,
-        })
-          .map((_, index) => {
-            const nextStart = dates.start.add(index, 'weeks').startOf('week');
-            const nextEnd = nextStart.endOf('week');
-            const start = nextStart.isAfter(dates.start)
-              ? nextStart
-              : dates.start;
-            const end = nextEnd.isBefore(dates.end) ? nextEnd : dates.end;
-            return {
-              start,
-              end,
-              totalDays: end.diff(start, 'days') + 1,
-            };
-          })
-          .map((week) => {
-            return {
-              ...week,
-              sessions:
-                data?.filter(({ date }) => {
-                  return (
-                    dayjs(date).isSameOrAfter(week.start) &&
-                    dayjs(date).isSameOrBefore(week.end)
-                  );
-                }) ?? [],
-            };
-          });
+        }).map((_, index) => {
+          const nextStart = dates.start.add(index, 'weeks').startOf('week');
+          const nextEnd = nextStart.endOf('week');
+          const start = nextStart.isAfter(dates.start)
+            ? nextStart
+            : dates.start;
+          const end = nextEnd.isBefore(dates.end) ? nextEnd : dates.end;
+          return {
+            start,
+            end,
+            totalDays: end.diff(start, 'days') + 1,
+          };
+        });
+
+  const groupedSessions =
+    isLoading || dates.range === 'week'
+      ? null
+      : data?.reduce<{
+          [key: string]: HydratedSession[];
+        }>((obj, session) => {
+          const weekStart = dayjs(session.date).startOf('week');
+          const weekKey = weekStart.isAfter(dates.start)
+            ? weekStart.format('YYYY-MM-DD')
+            : dates.start.format('YYYY-MM-DD');
+          const current = obj[weekKey] || [];
+          current.push(session);
+          return {
+            ...obj,
+            [weekKey]: current,
+          };
+        }, {});
+
+  const weeks = weekDates?.map((dates) => {
+    const key = dates.start.format('YYYY-MM-DD');
+    const sessions = groupedSessions?.[key] || [];
+    return {
+      ...dates,
+      sessions,
+    };
+  });
 
   return (
     <div className={''}>
