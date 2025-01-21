@@ -5,6 +5,10 @@ import { useRolls } from '../../hooks/useRolls/useRolls.ts';
 import { Roll } from '../../hooks/useRolls/types.ts';
 import { DatesHeader } from '../../components/DatesHeader.tsx';
 import { SelectableButtonList } from '../../components/ButtonList.tsx';
+import {
+  convertSecondsToDuration,
+  removeDurationLeadingZeros,
+} from '../../utilities/duration.tsx';
 
 const sortOptions: ('week' | 'belts' | 'teammate')[] = [
   'week',
@@ -111,14 +115,28 @@ export const Rolls = ({
             }))}
           />
         </div>
-
+        <p className={'my-2 font-bold'}>{rolls?.length ?? 0} Total</p>
         {sortedKey?.length
           ? sortedKey.map((key) => {
               const item = data?.[key];
+              const duration = item?.reduce((num, { durationInSeconds }) => {
+                if (durationInSeconds) {
+                  return num + durationInSeconds;
+                }
+                return num;
+              }, 0);
+              const time = duration
+                ? removeDurationLeadingZeros(convertSecondsToDuration(duration))
+                : null;
+
               return item ? (
                 <div key={key}>
                   <p className='capitalize'>
-                    {key}: {item.length}
+                    {key}: {item.length}{' '}
+                    {item.length && rolls?.length
+                      ? ` - ${((item.length / rolls.length) * 100).toFixed(2)}%`
+                      : ''}
+                    {time ? ` - ${time}` : ''}
                   </p>
                 </div>
               ) : null;

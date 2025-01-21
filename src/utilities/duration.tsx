@@ -20,3 +20,17 @@ export const convertDurationToSeconds = (duration: string) => {
     return 0;
   }
 };
+
+export const removeDurationLeadingZeros = (duration: string) => {
+  const asArray = duration.split(':');
+
+  return asArray
+    .map((val, index) => {
+      if (index + 1 < asArray.length && +val === 0) {
+        return null;
+      }
+      return val;
+    })
+    .filter((val) => val !== null)
+    .join(':');
+};
