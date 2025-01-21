@@ -13,9 +13,7 @@ export const Teammate = () => {
     teamId: id ? +id : undefined,
   });
 
-  const teammate = id
-    ? teammates?.find((teammate) => teammate.id === +id)
-    : null;
+  const teammate = id ? teammates?.[0] : null;
 
   return isLoading ? (
     <div className={'p-4 flex items-center justify-center'}>

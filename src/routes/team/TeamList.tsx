@@ -22,7 +22,11 @@ export const TeamList = () => {
 
   const sortedTeam = filteredTeam
     ? structuredClone(filteredTeam).sort((a, b) => {
-        return a.belt > b.belt ? -1 : 1;
+        return a.rollCount === b.rollCount
+          ? 0
+          : a.rollCount > b.rollCount
+            ? -1
+            : 1;
       })
     : team;
 
@@ -64,7 +68,8 @@ export const TeamList = () => {
         {sortedTeam?.map((mate) => (
           <div key={mate.id} className={'flex gap-2 py-3 items-center'}>
             <Link to={`${mate.id}`} className={'underline'}>
-              {mate.name}: {mate.beltName} belt
+              {mate.name}: {mate.beltName} belt{' '}
+              <span className={'text-sm'}>({mate.rollCount} rolls)</span>
             </Link>
             <Modal
               title={`Edit teammate`}

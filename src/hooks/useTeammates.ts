@@ -18,7 +18,7 @@ export const useTeammates = (props?: { id?: number }) => {
     queryKey.push(id);
   }
   const getTeammates = async () => {
-    const query = supabase.from('Teammates').select('*');
+    const query = supabase.from('Teammates').select('*, Rolls(count)');
 
     if (id) {
       query.eq('id', id);
@@ -30,12 +30,14 @@ export const useTeammates = (props?: { id?: number }) => {
         belt: number;
         id: number;
         is_coach: boolean;
+        Rolls: { count: number }[];
       }[]
     >();
     return response?.map((mate) => ({
       ...mate,
       isCoach: mate.is_coach,
       beltName: belts[mate.belt - 1],
+      rollCount: mate.Rolls?.[0]?.count ?? 0,
     }));
   };
 
