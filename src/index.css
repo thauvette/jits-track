@@ -54,7 +54,7 @@
       }
     }
     .custom-select__menu {
-      @apply bg-gray-1;
+      @apply bg-gray-1 relative md:absolute;
       .custom-select__option {
         @apply bg-gray-2 hover:bg-gray-1;
       }
@@ -97,7 +97,7 @@
     animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .DialogContent {
-    @apply p-4 bg-1 fixed z-20;
+    @apply p-4 bg-1 fixed z-20 overflow-y-scroll;
 
     animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
     &.full-screen {

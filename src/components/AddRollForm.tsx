@@ -152,11 +152,13 @@ export const AddRollForm = ({
                 />
               </label>
             </div>
-            <div>
-              <label className={'flex gap-2 items-center'}>
-                <Field name={'nogi'} type={'checkbox'} />
-                <p>Nogi</p>
-              </label>
+            <div className={'flex'}>
+              <div>
+                <label className={'flex gap-2 items-center'}>
+                  <Field name={'nogi'} type={'checkbox'} />
+                  <p>Nogi</p>
+                </label>
+              </div>
             </div>
             <div>
               <label>

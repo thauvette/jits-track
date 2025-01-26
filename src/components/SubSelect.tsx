@@ -1,6 +1,6 @@
 import { useSubs } from '../hooks/useSubs.ts';
 import CreatableSelect from 'react-select/creatable';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export const SubSelect = ({
   onChange,
@@ -11,6 +11,7 @@ export const SubSelect = ({
 }) => {
   const { data, isLoading, addSub, refetch, isRefetching } = useSubs();
   const [createLoading, setCreateLoading] = useState(false);
+  const ref = useRef<null | HTMLDivElement>(null);
   const disabled = isLoading || createLoading || isRefetching;
   const options =
     data?.map(({ name, id }) => ({
@@ -22,11 +23,10 @@ export const SubSelect = ({
     label: data?.find((datum) => datum.id === id)?.name ?? '',
     value: id,
   }));
-
   return (
-    <div>
+    <div ref={ref}>
       <CreatableSelect
-        className={'custom-select'}
+        className={'custom-select '}
         classNamePrefix={'custom-select'}
         isClearable={true}
         isMulti={true}
@@ -35,6 +35,13 @@ export const SubSelect = ({
         options={options}
         onChange={(newValues) => {
           onChange(newValues?.map(({ value }) => +value) ?? []);
+        }}
+        onFocus={() => {
+          if (ref.current) {
+            ref.current.scrollIntoView({
+              behavior: 'smooth',
+            });
+          }
         }}
         onCreateOption={async (value) => {
           setCreateLoading(true);

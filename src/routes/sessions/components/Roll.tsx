@@ -22,16 +22,18 @@ export const SessionRolls = ({ session }: { session: HydratedSession }) => {
             </button>
           }
           renderChildren={({ closeModal }) => (
-            <AddRollForm
-              hideDate
-              onSuccess={closeModal}
-              initialValues={{
-                date: session?.date,
-                session: session?.id,
-                nogi: !!session?.nogi,
-                duration: profile?.default_round_length,
-              }}
-            />
+            <div className={'min-h-screen'}>
+              <AddRollForm
+                hideDate
+                onSuccess={closeModal}
+                initialValues={{
+                  date: session?.date,
+                  session: session?.id,
+                  nogi: !!session?.nogi,
+                  duration: profile?.default_round_length,
+                }}
+              />
+            </div>
           )}
         />
       </div>
